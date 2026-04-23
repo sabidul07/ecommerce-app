@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f5f0e8;
+  color: #0a0a0b;
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-ink text-parchment px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-stone-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply border border-ink text-ink px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-ink hover:text-parchment active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-gold {
+    @apply bg-gold text-ink px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-gold-light active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .input-field {
+    @apply w-full bg-transparent border-b border-stone focus:border-ink outline-none py-3 text-ink placeholder:text-stone transition-colors duration-200 font-body text-sm;
+  }
+
+  .card {
+    @apply bg-white border border-stone-light p-6 transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:border-stone hover:shadow-md;
+  }
+
+  .section-title {
+    @apply font-display text-4xl font-light text-ink leading-tight;
+  }
+
+  .page-container {
+    @apply max-w-7xl mx-auto px-6 py-12;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(90deg, #e8e2d9 25%, #f0ebe2 50%, #e8e2d9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+}
