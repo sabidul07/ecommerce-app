@@ -12,19 +12,47 @@ export default function Navbar() {
   const router = useRouter();
   const { itemCount } = useCart();
   const [user, setUser] = useState<{ email?: string } | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user ? { email: data.user.email ?? "" } : null);
-    });
+
+    const loadUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        setUser({ email: data.user.email ?? "" });
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", data.user.id)
+          .single();
+        setIsAdmin(profile?.is_admin ?? false);
+      } else {
+        setUser(null);
+        setIsAdmin(false);
+      }
+    };
+
+    loadUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ? { email: session.user.email ?? "" } : null);
-      }
+      async (_event, session) => {
+        if (session?.user) {
+          setUser({ email: session.user.email ?? "" });
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("is_admin")
+            .eq("id", session.user.id)
+            .single();
+          setIsAdmin(profile?.is_admin ?? false);
+        } else {
+          setUser(null);
+          setIsAdmin(false);
+        }
+      },
     );
+
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -38,7 +66,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/products", label: "Shop" },
     { href: "/dashboard", label: "Dashboard", auth: true },
-    { href: "/upload-product", label: "Sell", auth: true },
+    { href: "/upload-product", label: "Sell", auth: true, adminOnly: true },
   ];
 
   return (
@@ -56,6 +84,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
             if (link.auth && !user) return null;
+            if (link.adminOnly && !isAdmin) return null;
             return (
               <Link
                 key={link.href}
@@ -75,7 +104,10 @@ export default function Navbar() {
         {/* Right Actions */}
         <div className="flex items-center gap-4">
           {/* Cart */}
-          <Link href="/cart" className="relative p-2 hover:text-gold transition-colors">
+          <Link
+            href="/cart"
+            className="relative p-2 hover:text-gold transition-colors"
+          >
             <ShoppingBag size={20} />
             {itemCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-rust text-parchment text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
@@ -97,6 +129,11 @@ export default function Navbar() {
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-stone-light shadow-lg">
                   <div className="px-4 py-3 border-b border-stone-light">
                     <p className="text-xs text-stone truncate">{user.email}</p>
+                    {isAdmin && (
+                      <p className="text-xs text-gold font-medium mt-0.5">
+                        Admin
+                      </p>
+                    )}
                   </div>
                   <Link
                     href="/dashboard"
@@ -105,13 +142,15 @@ export default function Navbar() {
                   >
                     <Package size={14} /> Dashboard
                   </Link>
-                  <Link
-                    href="/upload-product"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-parchment transition-colors"
-                  >
-                    <UploadCloud size={14} /> Sell a Product
-                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/upload-product"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-parchment transition-colors"
+                    >
+                      <UploadCloud size={14} /> Add Product
+                    </Link>
+                  )}
                   <button
                     onClick={handleSignOut}
                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-rust hover:bg-parchment transition-colors"
