@@ -2,9 +2,11 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Package, ShoppingBag, Plus, TrendingUp } from "lucide-react";
+import { Package, ShoppingBag, Plus, TrendingUp, BarChart2 } from "lucide-react";
 import { Product, Order } from "@/types";
 import DeleteProductButton from "@/components/DeleteProductButton";
+import AdminCharts from "@/components/charts/AdminCharts";
+import UserCharts from "@/components/charts/UserCharts";
 
 export const revalidate = 0;
 
@@ -28,7 +30,14 @@ export default async function DashboardPage() {
 
   const isAdmin = profile?.is_admin ?? false;
 
-  // Admin: fetch all products; regular user: skip
+  // Admin: fetch all orders for charts
+  const { data: allOrders } = isAdmin
+    ? await supabase
+        .from("orders")
+        .select("*, order_items(*, products(title, price))")
+        .order("created_at", { ascending: false })
+    : { data: null };
+
   const { data: products } = isAdmin
     ? await supabase
         .from("products")
@@ -38,6 +47,9 @@ export default async function DashboardPage() {
 
   const totalRevenue =
     (products as Product[])?.reduce((sum, p) => sum + p.price, 0) ?? 0;
+
+  const totalOrderRevenue =
+    (allOrders as Order[])?.reduce((sum, o) => sum + o.total, 0) ?? 0;
 
   return (
     <div className="page-container">
@@ -56,10 +68,7 @@ export default async function DashboardPage() {
           )}
         </div>
         {isAdmin && (
-          <Link
-            href="/upload-product"
-            className="btn-gold inline-flex items-center gap-2"
-          >
+          <Link href="/upload-product" className="btn-gold inline-flex items-center gap-2">
             <Plus size={16} />
             Add Product
           </Link>
@@ -67,9 +76,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div
-        className={`grid gap-4 mb-12 ${isAdmin ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-2"}`}
-      >
+      <div className={`grid gap-4 mb-12 ${isAdmin ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-2"}`}>
         {isAdmin && (
           <>
             <div className="card">
@@ -79,29 +86,51 @@ export default async function DashboardPage() {
             </div>
             <div className="card">
               <TrendingUp size={18} className="text-gold mb-3" />
-              <p className="font-display text-2xl">
-                ₹{totalRevenue.toFixed(2)}
-              </p>
-              <p className="text-stone text-xs mt-1">Listings Value</p>
+              <p className="font-display text-2xl">₹{totalOrderRevenue.toFixed(0)}</p>
+              <p className="text-stone text-xs mt-1">Total Revenue</p>
+            </div>
+            <div className="card">
+              <BarChart2 size={18} className="text-gold mb-3" />
+              <p className="font-display text-2xl">{allOrders?.length ?? 0}</p>
+              <p className="text-stone text-xs mt-1">Total Orders</p>
+            </div>
+            <div className="card">
+              <TrendingUp size={18} className="text-gold mb-3" />
+              <p className="font-display text-2xl">₹{totalRevenue.toFixed(0)}</p>
+              <p className="text-stone text-xs mt-1">Catalog Value</p>
             </div>
           </>
         )}
-        <div className="card">
-          <ShoppingBag size={18} className="text-gold mb-3" />
-          <p className="font-display text-2xl">{orders?.length ?? 0}</p>
-          <p className="text-stone text-xs mt-1">Orders Placed</p>
-        </div>
-        <div className="card">
-          <TrendingUp size={18} className="text-gold mb-3" />
-          <p className="font-display text-2xl">
-            ₹
-            {(orders as Order[])
-              ?.reduce((sum, o) => sum + o.total, 0)
-              .toFixed(2) ?? "0.00"}
-          </p>
-          <p className="text-stone text-xs mt-1">Total Spent</p>
-        </div>
+        {!isAdmin && (
+          <>
+            <div className="card">
+              <ShoppingBag size={18} className="text-gold mb-3" />
+              <p className="font-display text-2xl">{orders?.length ?? 0}</p>
+              <p className="text-stone text-xs mt-1">Orders Placed</p>
+            </div>
+            <div className="card">
+              <TrendingUp size={18} className="text-gold mb-3" />
+              <p className="font-display text-2xl">
+                ₹{(orders as Order[])?.reduce((sum, o) => sum + o.total, 0).toFixed(0) ?? "0"}
+              </p>
+              <p className="text-stone text-xs mt-1">Total Spent</p>
+            </div>
+          </>
+        )}
       </div>
+
+      {/* Admin Charts */}
+      {isAdmin && (
+        <AdminCharts
+          orders={(allOrders as any[]) ?? []}
+          products={(products as any[]) ?? []}
+        />
+      )}
+
+      {/* User Charts */}
+      {!isAdmin && (
+        <UserCharts orders={(orders as any[]) ?? []} />
+      )}
 
       {/* Admin: Products Section */}
       {isAdmin && (
@@ -120,10 +149,7 @@ export default async function DashboardPage() {
             <div className="card text-center py-12">
               <Package size={36} className="text-stone-light mx-auto mb-3" />
               <p className="text-stone text-sm">No products yet.</p>
-              <Link
-                href="/upload-product"
-                className="btn-primary inline-block mt-4 text-sm"
-              >
+              <Link href="/upload-product" className="btn-primary inline-block mt-4 text-sm">
                 Add First Product
               </Link>
             </div>
@@ -147,27 +173,17 @@ export default async function DashboardPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">
-                      {product.title}
-                    </p>
-                    <p className="font-display text-lg">
-                      ₹{product.price.toFixed(2)}
-                    </p>
+                    <p className="font-medium text-sm truncate">{product.title}</p>
+                    <p className="font-display text-lg">₹{product.price.toFixed(2)}</p>
                     <p className="text-xs text-stone">
-                      {new Date(product.created_at).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        },
-                      )}
+                      {new Date(product.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </p>
                   </div>
-                  <DeleteProductButton
-                    productId={product.id}
-                    imageUrl={product.image}
-                  />
+                  <DeleteProductButton productId={product.id} imageUrl={product.image} />
                 </div>
               ))}
             </div>
@@ -183,10 +199,7 @@ export default async function DashboardPage() {
           <div className="card text-center py-12">
             <ShoppingBag size={36} className="text-stone-light mx-auto mb-3" />
             <p className="text-stone text-sm">No orders yet.</p>
-            <Link
-              href="/products"
-              className="btn-primary inline-block mt-4 text-sm"
-            >
+            <Link href="/products" className="btn-primary inline-block mt-4 text-sm">
               Start Shopping
             </Link>
           </div>
@@ -197,14 +210,10 @@ export default async function DashboardPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-xs text-stone tracking-widest">ORDER</p>
-                    <p className="font-mono text-sm text-ink">
-                      {order.id.slice(0, 8).toUpperCase()}
-                    </p>
+                    <p className="font-mono text-sm text-ink">{order.id.slice(0, 8).toUpperCase()}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-display text-xl">
-                      ₹{order.total.toFixed(2)}
-                    </p>
+                    <p className="font-display text-xl">₹{order.total.toFixed(2)}</p>
                     <p className="text-xs text-stone">
                       {new Date(order.created_at).toLocaleDateString("en-US", {
                         month: "long",
@@ -217,18 +226,12 @@ export default async function DashboardPage() {
                 {order.order_items && order.order_items.length > 0 && (
                   <div className="border-t border-stone-light pt-3 space-y-1">
                     {order.order_items.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex justify-between text-sm"
-                      >
+                      <div key={item.id} className="flex justify-between text-sm">
                         <span className="text-stone">
                           {item.products?.title ?? "Unknown"} × {item.quantity}
                         </span>
                         <span>
-                          ₹
-                          {(
-                            (item.products?.price ?? 0) * item.quantity
-                          ).toFixed(2)}
+                          ₹{((item.products?.price ?? 0) * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     ))}

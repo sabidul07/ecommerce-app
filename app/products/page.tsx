@@ -38,7 +38,9 @@ export default async function ProductsPage() {
       {/* Header */}
       <div className="flex items-end justify-between mb-12 border-b border-stone-light pb-8">
         <div>
-          <p className="text-gold tracking-[0.3em] text-xs mb-2">OUR COLLECTION</p>
+          <p className="text-gold tracking-[0.3em] text-xs mb-2">
+            OUR COLLECTION
+          </p>
           <h1 className="section-title">All Products</h1>
         </div>
         <p className="text-stone text-sm">{products?.length ?? 0} items</p>
@@ -49,7 +51,9 @@ export default async function ProductsPage() {
         <div className="text-center py-24">
           <ShoppingBag size={48} className="text-stone-light mx-auto mb-4" />
           <h3 className="font-display text-2xl mb-2">No products yet</h3>
-          <p className="text-stone text-sm mb-6">Be the first to list something extraordinary.</p>
+          <p className="text-stone text-sm mb-6">
+            Be the first to list something extraordinary.
+          </p>
           <Link href="/upload-product" className="btn-primary inline-block">
             List a Product
           </Link>

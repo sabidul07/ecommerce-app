@@ -29,7 +29,10 @@ export default function DeleteProductButton({ productId, imageUrl }: Props) {
       }
     }
 
-    const { error } = await supabase.from("products").delete().eq("id", productId);
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", productId);
     if (!error) {
       router.refresh();
     }

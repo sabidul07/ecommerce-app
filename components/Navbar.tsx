@@ -14,6 +14,7 @@ export default function Navbar() {
   const [user, setUser] = useState<{ email?: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -57,10 +58,12 @@ export default function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    setMenuOpen(false);
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
-    setMenuOpen(false);
+    window.location.href = "/login";
   };
 
   const navLinks = [
@@ -153,9 +156,17 @@ export default function Navbar() {
                   )}
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-rust hover:bg-parchment transition-colors"
+                    disabled={signingOut}
+                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-rust hover:bg-parchment transition-colors disabled:opacity-50"
                   >
-                    <LogOut size={14} /> Sign Out
+                    {signingOut ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-rust/30 border-t-rust rounded-full animate-spin" />
+                        Signing out...
+                      </>
+                    ) : (
+                      <><LogOut size={14} /> Sign Out</>
+                    )}
                   </button>
                 </div>
               )}

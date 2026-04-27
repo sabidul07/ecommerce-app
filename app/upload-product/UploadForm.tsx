@@ -15,7 +15,29 @@ export default function UploadForm() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
   const [error, setError] = useState("");
+
+  // Compress image to max 800px width, JPEG 80% quality
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const img = document.createElement("img");
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX = 800;
+        let w = img.width, h = img.height;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        canvas.toBlob((blob) => {
+          resolve(new File([blob!], file.name.replace(/\.\w+$/, ".jpg"), { type: "image/jpeg" }));
+        }, "image/jpeg", 0.8);
+      };
+      img.src = url;
+    });
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -73,12 +95,14 @@ export default function UploadForm() {
     let imageUrl: string | null = null;
 
     if (imageFile) {
-      const ext = imageFile.name.split(".").pop();
-      const fileName = `${user.id}/${Date.now()}.${ext}`;
+      setUploadProgress("Compressing image…");
+      const compressed = await compressImage(imageFile);
+      setUploadProgress("Uploading image…");
+      const fileName = `${user.id}/${Date.now()}.jpg`;
 
       const { error: uploadError } = await supabase.storage
         .from("images")
-        .upload(fileName, imageFile, { upsert: false });
+        .upload(fileName, compressed, { upsert: false, contentType: "image/jpeg" });
 
       if (uploadError) {
         setError(`Image upload failed: ${uploadError.message}`);
@@ -249,7 +273,7 @@ export default function UploadForm() {
             {loading ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-parchment/30 border-t-parchment rounded-full animate-spin" />
-                Publishing…
+                {uploadProgress || "Publishing…"}
               </span>
             ) : (
               <>
