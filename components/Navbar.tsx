@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, User, LogOut, Package, UploadCloud } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { createClient } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
+import { signOut } from "@/app/actions/auth";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { itemCount } = useCart();
   const [user, setUser] = useState<{ email?: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -38,19 +38,15 @@ export default function Navbar() {
     loadUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (session?.user) {
-          setUser({ email: session.user.email ?? "" });
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("is_admin")
-            .eq("id", session.user.id)
-            .single();
-          setIsAdmin(profile?.is_admin ?? false);
-        } else {
-          setUser(null);
-          setIsAdmin(false);
-        }
+      (_event, session) => {
+        startTransition(() => {
+          if (session?.user) {
+            setUser({ email: session.user.email ?? "" });
+          } else {
+            setUser(null);
+            setIsAdmin(false);
+          }
+        });
       },
     );
 
@@ -61,9 +57,8 @@ export default function Navbar() {
     if (signingOut) return;
     setSigningOut(true);
     setMenuOpen(false);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = "/login";
+    await signOut();
+    window.location.replace("/login");
   };
 
   const navLinks = [
