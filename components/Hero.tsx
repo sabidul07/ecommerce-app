@@ -24,17 +24,10 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
   };
 
   return (
-    <section className="relative bg-ink text-parchment overflow-hidden min-h-[640px] flex items-center">
+    <section className="relative bg-ink text-parchment overflow-hidden flex items-center">
       {/* Background glow */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 75% 50%, #C9A84C15 0%, transparent 50%)",
-        }}
-      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 relative z-10 w-full grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 m:px-6 py-8 xl:py-24 pb-28  relative z-10 w-full grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Content */}
         <motion.div
           variants={staggerContainer}
@@ -44,10 +37,9 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           <motion.p variants={fadeInUp} className="text-gold tracking-[0.3em] text-xs mb-6 font-semibold">
             CURATED MARKETPLACE
           </motion.p>
-          <motion.h1 variants={fadeInUp} className="font-display text-6xl md:text-7xl lg:text-8xl font-light leading-[1.05] mb-6">
+          <motion.h1 variants={fadeInUp} className="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] mb-6">
             Discover
-            <br />
-            <em className="italic text-gold-light">Exceptional</em>
+            <em className="italic text-gold-light"> Exceptional</em>
             <br />
             Goods
           </motion.h1>
@@ -57,21 +49,21 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           <motion.div variants={fadeInUp} className="flex gap-4 flex-wrap">
             <Link
               href="/products"
-              className="btn-gold inline-flex items-center gap-2 px-8 py-4 text-sm"
+              className="btn-gold inline-flex items-center justify-center gap-2 px-4 lg:p-6 xl:px-8 py-4 text-sm max-sm:flex-1"
             >
               Browse Collection <ArrowRight size={16} />
             </Link>
             {isAdmin ? (
               <Link
                 href="/upload-product"
-                className="border border-parchment/30 text-parchment px-8 py-4 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
+                className="border border-parchment/30 text-parchment px-4 lg:p-6 xl:px-8 py-4 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
               >
                 Add Product
               </Link>
             ) : (
               <Link
                 href="/signup"
-                className="border border-parchment/30 text-parchment px-8 py-4 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
+                className="border border-parchment/30 text-parchment px-4 lg:p-6 xl:px-8 py-4 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
               >
                 Start Selling
               </Link>

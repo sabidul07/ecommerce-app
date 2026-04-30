@@ -13,7 +13,7 @@ export const metadata = {
   description: "Manage your personal information, addresses, and account settings.",
 };
 
-const SECTION = "border border-stone-light p-6 space-y-6";
+const SECTION = "border border-stone-light p-4 lg:p-6 space-y-6";
 const SECTION_TITLE = "font-display text-xl font-light text-ink";
 
 export default async function ProfilePage() {
@@ -45,88 +45,88 @@ export default async function ProfilePage() {
 
   return (
     <main className="bg-parchment min-h-screen">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 space-y-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 space-y-10">
 
-          {/* ── Header ── */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-gold/10 border-2 border-gold/30 flex items-center justify-center shrink-0">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="avatar" className="w-20 h-20 rounded-full object-cover" />
-              ) : (
-                <span className="font-display text-2xl text-gold font-medium">{initials}</span>
-              )}
-            </div>
-            <div>
-              <h1 className="font-display text-3xl font-light text-ink">
-                {profile?.full_name || "Your Profile"}
-              </h1>
-              <p className="text-stone text-sm mt-0.5">{user.email}</p>
-              <p className="text-stone text-xs mt-1">Member since {memberSince}</p>
-            </div>
+        {/* ── Header ── */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <div className="w-20 h-20 rounded-full bg-gold/10 border-2 border-gold/30 flex items-center justify-center shrink-0">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="avatar" className="w-20 h-20 rounded-full object-cover" />
+            ) : (
+              <span className="font-display text-2xl text-gold font-medium">{initials}</span>
+            )}
           </div>
-
-          {/* ── Personal Information ── */}
-          <div className={SECTION}>
-            <div>
-              <h2 className={SECTION_TITLE}>Personal Information</h2>
-              <p className="text-stone text-xs mt-1">Changes to your email will require re-verification.</p>
-            </div>
-            <AvatarUpload
-              userId={user.id}
-              avatarUrl={profile?.avatar_url ?? null}
-              fullName={profile?.full_name ?? ""}
-            />
-            <PersonalInfoForm
-              userId={user.id}
-              initialData={{
-                full_name: profile?.full_name ?? "",
-                phone: profile?.phone ?? "",
-                email: user.email ?? "",
-              }}
-            />
+          <div>
+            <h1 className="font-display text-3xl font-light text-ink">
+              {profile?.full_name || "Your Profile"}
+            </h1>
+            <p className="text-stone text-sm mt-0.5">{user.email}</p>
+            <p className="text-stone text-xs mt-1">Member since {memberSince}</p>
           </div>
-
-          {/* ── Saved Addresses ── */}
-          <div className={SECTION}>
-            <h2 className={SECTION_TITLE}>Saved Addresses</h2>
-            <AddressManager
-              userId={user.id}
-              initialAddresses={addresses ?? []}
-            />
-          </div>
-
-          {/* ── Change Password ── */}
-          <div className="space-y-2">
-            <h2 className={SECTION_TITLE}>Change Password</h2>
-            <ChangePassword isOAuthUser={isOAuthUser} />
-          </div>
-
-          {/* ── Notification Preferences ── */}
-          <div className={SECTION}>
-            <h2 className={SECTION_TITLE}>Notification Preferences</h2>
-            <NotificationPrefs
-              userId={user.id}
-              initialPrefs={notificationPrefs}
-            />
-          </div>
-
-          {/* ── Account Security ── */}
-          <div className={SECTION}>
-            <h2 className={SECTION_TITLE}>Account Security</h2>
-            <AccountSecurity
-              provider={provider}
-              lastLogin={lastLogin}
-              email={user.email ?? ""}
-            />
-          </div>
-
-          {/* ── Danger Zone ── */}
-          <div className="space-y-3">
-            <h2 className={`${SECTION_TITLE} text-rust`}>Danger Zone</h2>
-            <DangerZone email={user.email ?? ""} />
-          </div>
-
         </div>
-      </main>
-    );
+
+        {/* ── Personal Information ── */}
+        <div className={SECTION}>
+          <div>
+            <h2 className={SECTION_TITLE}>Personal Information</h2>
+            <p className="text-stone text-xs mt-1">Changes to your email will require re-verification.</p>
+          </div>
+          <AvatarUpload
+            userId={user.id}
+            avatarUrl={profile?.avatar_url ?? null}
+            fullName={profile?.full_name ?? ""}
+          />
+          <PersonalInfoForm
+            userId={user.id}
+            initialData={{
+              full_name: profile?.full_name ?? "",
+              phone: profile?.phone ?? "",
+              email: user.email ?? "",
+            }}
+          />
+        </div>
+
+        {/* ── Saved Addresses ── */}
+        <div className={SECTION}>
+          <h2 className={SECTION_TITLE}>Saved Addresses</h2>
+          <AddressManager
+            userId={user.id}
+            initialAddresses={addresses ?? []}
+          />
+        </div>
+
+        {/* ── Change Password ── */}
+        <div className="space-y-2">
+          <h2 className={SECTION_TITLE}>Change Password</h2>
+          <ChangePassword isOAuthUser={isOAuthUser} />
+        </div>
+
+        {/* ── Notification Preferences ── */}
+        <div className={SECTION}>
+          <h2 className={SECTION_TITLE}>Notification Preferences</h2>
+          <NotificationPrefs
+            userId={user.id}
+            initialPrefs={notificationPrefs}
+          />
+        </div>
+
+        {/* ── Account Security ── */}
+        <div className={SECTION}>
+          <h2 className={SECTION_TITLE}>Account Security</h2>
+          <AccountSecurity
+            provider={provider}
+            lastLogin={lastLogin}
+            email={user.email ?? ""}
+          />
+        </div>
+
+        {/* ── Danger Zone ── */}
+        <div className="space-y-3">
+          <h2 className={`${SECTION_TITLE} text-rust`}>Danger Zone</h2>
+          <DangerZone email={user.email ?? ""} />
+        </div>
+
+      </div>
+    </main>
+  );
 }

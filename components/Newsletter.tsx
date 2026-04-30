@@ -24,7 +24,7 @@ export default function Newsletter() {
     setErrorMessage("");
 
     const supabase = createClient();
-    
+
     try {
       const { error } = await supabase
         .from("newsletter_subscribers")
@@ -47,8 +47,8 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="bg-[#fcfbf9] py-20 border-t border-stone-light">
-      <div className="max-w-xl mx-auto px-6 text-center">
+    <section className="bg-[#fcfbf9] py-12 xl:py-20 border-t border-stone-light">
+      <div className="max-w-xl mx-auto px-4 xl:px-6 text-center">
         <h2 className="font-display text-3xl md:text-4xl font-light text-ink mb-4">
           Stay in the loop
         </h2>

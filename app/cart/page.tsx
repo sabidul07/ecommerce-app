@@ -205,7 +205,7 @@ export default function CartPage() {
   return (
     <div className="page-container">
       {/* Header */}
-      <div className="flex items-end justify-between mb-10 border-b border-stone-light pb-8">
+      <div className="flex  items-end justify-between mb-10 flex-wrap border-b border-stone-light pb-8">
         <div>
           <p className="text-gold tracking-[0.3em] text-xs mb-2">YOUR SELECTION</p>
           <h1 className="section-title">Shopping Bag</h1>

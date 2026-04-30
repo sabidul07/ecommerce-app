@@ -16,10 +16,10 @@ function Counter({ end, duration = 2000, decimals = 0 }: { end: number, duration
           const animate = (currentTime: number) => {
             const elapsedTime = currentTime - startTime;
             const progress = Math.min(elapsedTime / duration, 1);
-            
+
             // ease-out cubic
             const easeProgress = 1 - Math.pow(1 - progress, 3);
-            
+
             setCount(end * easeProgress);
 
             if (progress < 1) {
@@ -28,7 +28,7 @@ function Counter({ end, duration = 2000, decimals = 0 }: { end: number, duration
               setCount(end);
             }
           };
-          
+
           requestAnimationFrame(animate);
           observer.disconnect();
         }
@@ -41,8 +41,8 @@ function Counter({ end, duration = 2000, decimals = 0 }: { end: number, duration
     return () => observer.disconnect();
   }, [end, duration]);
 
-  const formattedCount = decimals > 0 
-    ? count.toFixed(decimals) 
+  const formattedCount = decimals > 0
+    ? count.toFixed(decimals)
     : Math.floor(count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
   return <span ref={ref}>{formattedCount}</span>;
@@ -65,7 +65,7 @@ export default function StatsBar() {
               <div className="w-12 h-12 rounded-full bg-parchment border border-stone-light flex items-center justify-center mx-auto mb-4 group-hover:border-gold group-hover:bg-gold/5 transition-all">
                 <Icon size={20} className="text-gold" />
               </div>
-              <p className="font-display text-4xl font-light text-ink mb-1">
+              <p className="font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink mb-1">
                 <Counter end={value} decimals={decimals} />
                 {suffix}
               </p>

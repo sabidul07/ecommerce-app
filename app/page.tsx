@@ -42,15 +42,15 @@ export default async function HomePage() {
       count: "120+",
       image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800&auto=format&fit=crop",
     },
-    { 
-      name: "Accessories", 
-      count: "85+", 
-      image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=800&auto=format&fit=crop" 
+    {
+      name: "Accessories",
+      count: "85+",
+      image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=800&auto=format&fit=crop"
     },
-    { 
-      name: "Ceramics", 
-      count: "60+", 
-      image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop" 
+    {
+      name: "Ceramics",
+      count: "60+",
+      image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop"
     },
     {
       name: "Art & Prints",
@@ -76,11 +76,11 @@ export default async function HomePage() {
       <TrendingStrip />
 
       {/* ── FEATURED PRODUCTS ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
-        <div className="flex items-end justify-between mb-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-5">
           <div>
             <p className="text-gold tracking-[0.3em] text-xs mb-2 font-semibold">OUR SELECTION</p>
-            <h2 className="font-display text-4xl font-light text-ink">Featured Products</h2>
+            <h2 className="font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink">Featured Products</h2>
           </div>
           <Link
             href="/products"
@@ -89,7 +89,7 @@ export default async function HomePage() {
             View all <ArrowRight size={14} />
           </Link>
         </div>
-        
+
         {featuredProducts && featuredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
             {featuredProducts.map((product) => (
@@ -97,7 +97,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-24 bg-parchment border border-stone-light border-dashed rounded-xl flex flex-col items-center justify-center space-y-2">
+          <div className="text-center py-24 bg-parchment border border-stone-light border-dashed rounded-xl flex flex-col items-center justify-center space-y-2 px-4">
             <div className="w-16 h-16 bg-white border border-stone-light rounded-full flex items-center justify-center mb-4 shadow-sm">
               <Package size={24} className="text-stone-400" />
             </div>
@@ -116,12 +116,12 @@ export default async function HomePage() {
 
       {/* ── WHY ATELIER ── */}
       <section className="bg-parchment border-y border-stone-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
           <div className="mb-16">
             <p className="text-gold tracking-[0.3em] text-xs mb-4 font-semibold">
               WHY ATELIER?
             </p>
-            <h2 className="font-display text-4xl md:text-5xl font-light leading-tight text-ink">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light leading-tight text-ink">
               More than a marketplace.
               <br />
               <em className="italic text-stone-500">A community.</em>
@@ -145,9 +145,9 @@ export default async function HomePage() {
                 desc: "Join thousands of artisans and independent creators building their businesses here.",
               },
             ].map(({ icon: Icon, title, desc }) => (
-            <div
+              <div
                 key={title}
-                className="bg-white p-8 border border-stone-light hover:border-gold transition-all duration-300 group"
+                className="bg-white p-4 lg:p-8 border border-stone-light hover:border-gold transition-all duration-300 group"
               >
                 <div className="w-12 h-12 bg-parchment rounded-full flex items-center justify-center mb-6 border border-stone-light group-hover:bg-gold/10 group-hover:border-gold/30 transition-colors">
                   <Icon size={24} className="text-gold" />
@@ -161,9 +161,9 @@ export default async function HomePage() {
       </section>
 
       {/* ── SHOP BY CATEGORY ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
-        <div className="flex items-end justify-between mb-10">
-          <h2 className="font-display text-4xl font-light text-ink">Shop by Category</h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-5">
+          <h2 className="font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink">Shop by Category</h2>
           <Link
             href="/products"
             className="text-stone text-sm font-medium hover:text-ink hover:underline inline-flex items-center gap-2 transition-colors"
@@ -197,9 +197,9 @@ export default async function HomePage() {
       </section>
 
       {/* ── SELLER CTA ── */}
-      <section className="relative bg-ink text-parchment py-24 overflow-hidden">
+      <section className="relative bg-ink text-parchment py-14 xl:py-24 overflow-hidden">
         {/* Subtle noise texture overlay */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.12] pointer-events-none"
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }}
         />
@@ -232,12 +232,12 @@ export default async function HomePage() {
                 </div>
               )}
             </div>
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 max-sm:w-full">
               {isAdmin ? (
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/upload-product"
-                    className="btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base"
+                    className="btn-gold inline-flex items-center justify-center gap-2 xl:px-8 py-4 text-base"
                   >
                     Add Product <ArrowRight size={18} />
                   </Link>
@@ -251,7 +251,7 @@ export default async function HomePage() {
               ) : (
                 <Link
                   href="/signup"
-                  className="btn-gold inline-flex items-center gap-2 text-lg px-10 py-5"
+                  className="btn-gold inline-flex items-center gap-2 text-lg px-5 xl:px-10 py-5 w-full"
                 >
                   Get Started Free <ArrowRight size={18} />
                 </Link>
