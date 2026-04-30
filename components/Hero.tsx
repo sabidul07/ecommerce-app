@@ -20,7 +20,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
   // headline: 0ms, subtext: 150ms, buttons: 300ms (driven by stagger)
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" } },
+    show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" as const } },
   };
 
   return (
