@@ -7,185 +7,10 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Minus, Plus, X, ShoppingBag, ArrowRight, Package } from "lucide-react";
 
-type RazorpayCheckoutResponse = {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-};
-
-type RazorpayOrderResponse = {
-  amount: number;
-  currency: string;
-  error?: string;
-  keyId: string;
-  orderId: string;
-};
-
-type RazorpayOptions = {
-  amount: number;
-  currency: string;
-  description: string;
-  handler: (response: RazorpayCheckoutResponse) => void;
-  key: string;
-  modal: {
-    ondismiss: () => void;
-  };
-  name: string;
-  order_id: string;
-  theme: {
-    color: string;
-  };
-};
-
-declare global {
-  interface Window {
-    Razorpay?: new (options: RazorpayOptions) => {
-      on: (event: "payment.failed", callback: (response: { error?: { description?: string } }) => void) => void;
-      open: () => void;
-    };
-  }
-}
-
-function loadRazorpayScript() {
-  return new Promise<boolean>((resolve) => {
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-}
-
 export default function CartPage() {
   const router = useRouter();
   const { items, removeFromCart, updateQuantity, clearCart, total, itemCount } = useCart();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
-  const handleCheckout = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const checkoutItems = items.map(({ product, quantity }) => ({
-        productId: product.id,
-        quantity,
-      }));
-
-      const scriptLoaded = await loadRazorpayScript();
-
-      if (!scriptLoaded || !window.Razorpay) {
-        setError("Razorpay checkout could not be loaded. Please check your connection.");
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch("/api/razorpay/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: checkoutItems }),
-      });
-
-      const result = (await response.json()) as RazorpayOrderResponse;
-
-      if (response.status === 401) {
-        router.push("/login");
-        return;
-      }
-
-      if (!response.ok) {
-        setError(result.error ?? "Failed to start payment. Please try again.");
-        setLoading(false);
-        return;
-      }
-
-      const razorpay = new window.Razorpay({
-        amount: result.amount,
-        currency: result.currency,
-        description: `${itemCount} item${itemCount !== 1 ? "s" : ""}`,
-        key: result.keyId,
-        modal: {
-          ondismiss: () => {
-            setLoading(false);
-          },
-        },
-        name: "Atelier",
-        order_id: result.orderId,
-        theme: {
-          color: "#C59A4A",
-        },
-        handler: async (paymentResponse) => {
-          try {
-            const verifyResponse = await fetch("/api/razorpay/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ...paymentResponse,
-                items: checkoutItems,
-              }),
-            });
-            const verifyResult = (await verifyResponse.json()) as { error?: string };
-
-            if (!verifyResponse.ok) {
-              setError(verifyResult.error ?? "Payment verification failed. Please contact support.");
-              setLoading(false);
-              return;
-            }
-
-            clearCart();
-            setSuccess(true);
-          } catch {
-            setError("Payment was completed, but verification failed. Please contact support.");
-          } finally {
-            setLoading(false);
-          }
-        },
-      });
-
-      razorpay.on("payment.failed", (failure) => {
-        setError(failure.error?.description ?? "Payment failed. Please try again.");
-        setLoading(false);
-      });
-
-      razorpay.open();
-    } catch {
-      setError("Something went wrong while starting payment. Please try again.");
-      setLoading(false);
-    }
-  };
-
-  if (success) {
-    return (
-      <div className="page-container flex items-center justify-center min-h-[60vh]">
-        <div className="text-center max-w-sm">
-          <div className="w-20 h-20 bg-sage/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <p className="text-gold tracking-[0.3em] text-xs mb-3">ORDER CONFIRMED</p>
-          <h2 className="font-display text-4xl font-light mb-3">Thank You!</h2>
-          <p className="text-stone text-sm mb-8">
-            Your order has been placed successfully. View your order history in the dashboard.
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link href="/dashboard" className="btn-primary inline-flex items-center gap-2">
-              View Orders <ArrowRight size={16} />
-            </Link>
-            <Link href="/products" className="btn-secondary inline-block">
-              Keep Shopping
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (items.length === 0) {
     return (
@@ -306,28 +131,13 @@ export default function CartPage() {
               </div>
             </div>
 
-            {error && (
-              <div className="bg-rust/10 border border-rust/20 text-rust text-sm px-4 py-3 mb-4">
-                {error}
-              </div>
-            )}
 
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="btn-gold w-full flex items-center justify-center gap-2 text-sm"
+            <Link
+              href="/checkout"
+              className="btn-gold w-full flex items-center justify-center gap-2 text-sm py-4 group"
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
-                  Processing...
-                </span>
-              ) : (
-                <>
-                  Pay with Razorpay <ArrowRight size={16} />
-                </>
-              )}
-            </button>
+              Proceed to Checkout <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </Link>
 
             <p className="text-xs text-stone text-center mt-3">
               By ordering you agree to our terms of service.

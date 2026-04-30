@@ -8,7 +8,17 @@
         "app/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
         "app/products/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
         "app/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
+        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/product/[id]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/search/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/product/[slug]/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/checkout/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/admin/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/admin/products/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/admin/orders/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/admin/settings/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/admin/users/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
         "app/page": "action-browser",
@@ -17,7 +27,17 @@
         "app/profile/page": "action-browser",
         "app/products/page": "action-browser",
         "app/dashboard/page": "action-browser",
-        "app/login/page": "action-browser"
+        "app/login/page": "action-browser",
+        "app/signup/page": "action-browser",
+        "app/product/[id]/page": "action-browser",
+        "app/search/page": "action-browser",
+        "app/product/[slug]/page": "action-browser",
+        "app/checkout/page": "action-browser",
+        "app/admin/page": "action-browser",
+        "app/admin/products/page": "action-browser",
+        "app/admin/orders/page": "action-browser",
+        "app/admin/settings/page": "action-browser",
+        "app/admin/users/page": "action-browser"
       }
     }
   },
