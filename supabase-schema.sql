@@ -11,6 +11,7 @@
 CREATE TABLE IF NOT EXISTS public.profiles (
   id          UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   name        TEXT NOT NULL DEFAULT '',
+  is_admin    BOOLEAN NOT NULL DEFAULT false,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.products (
   title       TEXT NOT NULL CHECK (char_length(title) BETWEEN 1 AND 120),
   price       NUMERIC(10, 2) NOT NULL CHECK (price > 0),
   image       TEXT,
+  is_featured BOOLEAN NOT NULL DEFAULT false,
   user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -40,6 +42,13 @@ CREATE TABLE IF NOT EXISTS public.order_items (
   quantity    INTEGER NOT NULL CHECK (quantity > 0)
 );
 
+-- Newsletter Subscribers: user emails for newsletter
+CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email       TEXT NOT NULL UNIQUE,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- ─────────────────────────────────────────────
 -- 2. INDEXES (performance)
 -- ─────────────────────────────────────────────
@@ -58,6 +67,7 @@ ALTER TABLE public.profiles    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.orders      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
 -- ── profiles ──
 -- Users can read and update their own profile
@@ -139,6 +149,25 @@ CREATE POLICY "order_items: insert own"
       SELECT 1 FROM public.orders
       WHERE orders.id = order_items.order_id
         AND orders.user_id = auth.uid()
+    )
+  );
+
+-- ── newsletter_subscribers ──
+-- Anyone can insert
+DROP POLICY IF EXISTS "newsletter: public insert" ON public.newsletter_subscribers;
+CREATE POLICY "newsletter: public insert"
+  ON public.newsletter_subscribers FOR INSERT
+  WITH CHECK (true);
+
+-- Only admins can read
+DROP POLICY IF EXISTS "newsletter: admin read" ON public.newsletter_subscribers;
+CREATE POLICY "newsletter: admin read"
+  ON public.newsletter_subscribers FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid()
+        AND profiles.is_admin = true
     )
   );
 

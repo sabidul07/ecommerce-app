@@ -4,13 +4,15 @@ import {
   ShieldCheck,
   Users,
   Leaf,
-  Truck,
-  RotateCcw,
-  Headphones,
-  Lock,
-  Star,
+  Package,
 } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
+import Hero from "@/components/Hero";
+import StatsBar from "@/components/StatsBar";
+import TrendingStrip from "@/components/TrendingStrip";
+import Newsletter from "@/components/Newsletter";
+import ProductCard from "@/components/ProductCard";
+import Image from "next/image";
 
 export default async function HomePage() {
   const supabase = createServerSupabaseClient();
@@ -28,182 +30,143 @@ export default async function HomePage() {
     isAdmin = profile?.is_admin ?? false;
   }
 
+  const { data: featuredProducts } = await supabase
+    .from("products")
+    .select("*, profiles(name)")
+    .eq("is_featured", true)
+    .limit(8);
+
   const categories = [
     {
       name: "Home & Living",
       count: "120+",
-      color: "from-stone-200 to-stone-300",
+      image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800&auto=format&fit=crop",
     },
-    { name: "Accessories", count: "85+", color: "from-amber-100 to-amber-200" },
-    { name: "Ceramics", count: "60+", color: "from-slate-200 to-slate-300" },
+    { 
+      name: "Accessories", 
+      count: "85+", 
+      image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=800&auto=format&fit=crop" 
+    },
+    { 
+      name: "Ceramics", 
+      count: "60+", 
+      image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop" 
+    },
     {
       name: "Art & Prints",
       count: "95+",
-      color: "from-neutral-200 to-neutral-300",
+      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop",
     },
     {
       name: "Personal Care",
       count: "70+",
-      color: "from-stone-300 to-stone-400",
+      image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800&auto=format&fit=crop",
     },
   ];
 
   return (
     <div className="min-h-screen">
       {/* ── HERO ── */}
-      <section className="relative bg-ink text-parchment overflow-hidden min-h-[580px] flex items-center">
-        {/* Background glow */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 75% 50%, #C9A84C22 0%, transparent 60%)",
-          }}
-        />
-        {/* Right decorative circle */}
-        <div className="absolute right-0 top-0 w-[520px] h-[520px] rounded-full border border-gold/10 translate-x-1/3 -translate-y-1/4" />
-        <div className="absolute right-16 top-8 w-[380px] h-[380px] rounded-full border border-gold/10" />
+      <Hero isAdmin={isAdmin} />
 
-        <div className="max-w-7xl mx-auto px-6 py-24 relative z-10 w-full grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
+      {/* ── STATS BAR ── */}
+      <StatsBar />
+
+      {/* ── TRENDING STRIP ── */}
+      <TrendingStrip />
+
+      {/* ── FEATURED PRODUCTS ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <p className="text-gold tracking-[0.3em] text-xs mb-6">
-              CURATED MARKETPLACE
-            </p>
-            <h1 className="font-display text-6xl md:text-7xl font-light leading-[0.95] mb-6">
-              Discover
-              <br />
-              <em className="italic text-gold-light">Exceptional</em>
-              <br />
-              Goods
-            </h1>
-            <p className="text-stone-light max-w-md text-sm leading-relaxed mb-10">
-              A premium marketplace connecting artisans and collectors.
-              <br />
-              <strong className="text-parchment/80">
-                Every piece tells a story.
-              </strong>
-            </p>
-            <div className="flex gap-4 flex-wrap">
-              <Link
-                href="/products"
-                className="btn-gold inline-flex items-center gap-2"
-              >
-                Browse Collection <ArrowRight size={16} />
-              </Link>
-              {isAdmin ? (
-                <Link
-                  href="/upload-product"
-                  className="border border-parchment/30 text-parchment px-6 py-3 font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
-                >
-                  Add Product
-                </Link>
-              ) : (
-                <Link
-                  href="/products"
-                  className="border border-parchment/30 text-parchment px-6 py-3 font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
-                >
-                  Start Selling
-                </Link>
-              )}
-            </div>
+            <p className="text-gold tracking-[0.3em] text-xs mb-2 font-semibold">OUR SELECTION</p>
+            <h2 className="font-display text-4xl font-light text-ink">Featured Products</h2>
           </div>
-
-          {/* Right — decorative image area */}
-          <div className="hidden lg:flex items-center justify-center relative">
-            <div className="w-80 h-80 rounded-full bg-gradient-to-br from-stone-800 to-stone-900 border border-gold/20 flex items-center justify-center shadow-2xl">
-              <div className="w-60 h-60 rounded-full bg-gradient-to-br from-amber-900/40 to-stone-800 border border-gold/10 flex items-center justify-center">
-                <p className="font-display text-gold text-5xl font-light italic">
-                  A
-                </p>
-              </div>
-            </div>
-          </div>
+          <Link
+            href="/products"
+            className="text-stone text-sm font-medium hover:text-ink hover:underline inline-flex items-center gap-2 transition-colors"
+          >
+            View all <ArrowRight size={14} />
+          </Link>
         </div>
+        
+        {featuredProducts && featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product as any} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-24 bg-parchment border border-stone-light border-dashed rounded-xl flex flex-col items-center justify-center space-y-2">
+            <div className="w-16 h-16 bg-white border border-stone-light rounded-full flex items-center justify-center mb-4 shadow-sm">
+              <Package size={24} className="text-stone-400" />
+            </div>
+            <h3 className="font-display text-2xl font-light text-ink">No featured products</h3>
+            <p className="text-stone text-sm max-w-md">
+              Our curators are currently selecting the finest pieces to showcase here. Check back soon!
+            </p>
+            {isAdmin && (
+              <Link href="/upload-product" className="mt-6 btn-gold inline-flex items-center gap-2 text-sm py-2 px-4 shadow-sm hover:shadow-md">
+                Add some in the admin panel <ArrowRight size={14} />
+              </Link>
+            )}
+          </div>
+        )}
+      </section>
 
-        {/* Bottom feature badges */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-parchment/10 bg-parchment/5 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex gap-8 overflow-x-auto">
+      {/* ── WHY ATELIER ── */}
+      <section className="bg-parchment border-y border-stone-light">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
+          <div className="mb-16">
+            <p className="text-gold tracking-[0.3em] text-xs mb-4 font-semibold">
+              WHY ATELIER?
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl font-light leading-tight text-ink">
+              More than a marketplace.
+              <br />
+              <em className="italic text-stone-500">A community.</em>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: Leaf,
-                text: "Curated Quality",
-                sub: "Handpicked with care",
+                title: "Curated Quality",
+                desc: "Every product is reviewed to ensure it meets our standards of craftsmanship and authenticity.",
               },
               {
                 icon: ShieldCheck,
-                text: "Secure Payments",
-                sub: "100% protected",
+                title: "Secure Transactions",
+                desc: "Your payments and personal data are protected with industry-leading security.",
               },
               {
                 icon: Users,
-                text: "Support Artisans",
-                sub: "Empower creativity",
+                title: "Seller Community",
+                desc: "Join thousands of artisans and independent creators building their businesses here.",
               },
-            ].map(({ icon: Icon, text, sub }) => (
-              <div key={text} className="flex items-center gap-3 flex-shrink-0">
-                <Icon size={18} className="text-gold" />
-                <div>
-                  <p className="text-parchment text-sm font-medium">{text}</p>
-                  <p className="text-stone-light text-xs">{sub}</p>
+            ].map(({ icon: Icon, title, desc }) => (
+            <div
+                key={title}
+                className="bg-white p-8 border border-stone-light hover:border-gold transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 bg-parchment rounded-full flex items-center justify-center mb-6 border border-stone-light group-hover:bg-gold/10 group-hover:border-gold/30 transition-colors">
+                  <Icon size={24} className="text-gold" />
                 </div>
+                <h3 className="font-display text-2xl mb-3 text-ink text-left">{title}</h3>
+                <p className="text-stone text-sm leading-relaxed text-left">{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── WHY ATELIER ── */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <p className="text-gold tracking-[0.3em] text-xs mb-4">
-            WHY ATELIER?
-          </p>
-          <h2 className="font-display text-4xl md:text-5xl font-light leading-tight">
-            More than a marketplace.
-            <br />
-            <em className="italic text-stone">A community.</em>
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: Leaf,
-              title: "Curated Quality",
-              desc: "Every product is reviewed to ensure it meets our standards of craftsmanship and authenticity.",
-            },
-            {
-              icon: ShieldCheck,
-              title: "Secure Transactions",
-              desc: "Your payments and personal data are protected with industry-leading security.",
-            },
-            {
-              icon: Users,
-              title: "Seller Community",
-              desc: "Join thousands of artisans and independent creators building their businesses here.",
-            },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div
-              key={title}
-              className="card text-center hover:shadow-lg transition-shadow"
-            >
-              <div className="w-14 h-14 bg-parchment rounded-full flex items-center justify-center mx-auto mb-5 border border-stone-light">
-                <Icon size={22} className="text-gold" />
-              </div>
-              <h3 className="font-display text-xl mb-3">{title}</h3>
-              <p className="text-stone text-sm leading-relaxed">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ── SHOP BY CATEGORY ── */}
-      <section className="max-w-7xl mx-auto px-6 pb-24">
-        <div className="flex items-end justify-between mb-8">
-          <h2 className="font-display text-3xl font-light">Shop by Category</h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
+        <div className="flex items-end justify-between mb-10">
+          <h2 className="font-display text-4xl font-light text-ink">Shop by Category</h2>
           <Link
             href="/products"
-            className="text-gold text-sm hover:underline inline-flex items-center gap-1"
+            className="text-stone text-sm font-medium hover:text-ink hover:underline inline-flex items-center gap-2 transition-colors"
           >
             View all categories <ArrowRight size={14} />
           </Link>
@@ -213,48 +176,56 @@ export default async function HomePage() {
             <Link
               key={cat.name}
               href="/products"
-              className="group cursor-pointer"
+              className="group cursor-pointer block relative rounded-sm overflow-hidden aspect-[4/5] transition-transform duration-300 hover:scale-[1.03]"
             >
-              <div
-                className={`aspect-square bg-gradient-to-br ${cat.color} mb-3 overflow-hidden relative flex items-center justify-center group-hover:opacity-90 transition-opacity`}
-              >
-                <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors" />
-                <p className="font-display text-2xl text-stone-600 opacity-20 select-none">
-                  {cat.name[0]}
-                </p>
+              <Image
+                src={cat.image}
+                alt={cat.name}
+                fill
+                unoptimized
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 50vw, 20vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent transition-opacity group-hover:opacity-100 opacity-80" />
+              <div className="absolute bottom-0 left-0 w-full p-4">
+                <p className="font-display text-xl text-white mb-1">{cat.name}</p>
+                <p className="text-white/70 text-xs tracking-wider uppercase font-semibold">{cat.count} products</p>
               </div>
-              <p className="font-medium text-sm">{cat.name}</p>
-              <p className="text-stone text-xs">{cat.count} products</p>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="bg-ink text-parchment py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-              <p className="text-gold tracking-[0.3em] text-xs mb-3">
+      {/* ── SELLER CTA ── */}
+      <section className="relative bg-ink text-parchment py-24 overflow-hidden">
+        {/* Subtle noise texture overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.12] pointer-events-none"
+          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }}
+        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex-1">
+              <p className="text-gold tracking-[0.3em] text-xs mb-4 font-semibold">
                 JOIN OUR COMMUNITY
               </p>
-              <h2 className="font-display text-4xl md:text-5xl font-light mb-3">
+              <h2 className="font-display text-5xl md:text-6xl font-light mb-6">
                 {isAdmin ? "Manage Your Store" : "Ready to sell?"}
               </h2>
-              <p className="text-stone-light text-sm">
+              <p className="text-stone-300 text-lg max-w-lg mb-8">
                 {isAdmin
                   ? "Add products and manage your listings from the dashboard."
-                  : "Create your account and list your first product in minutes."}
+                  : "Create your account and list your first product in minutes. Join thousands of independent creators."}
               </p>
               {!isAdmin && (
-                <div className="flex gap-6 mt-4">
+                <div className="flex gap-8 border-t border-parchment/10 pt-8">
                   {["Free to join", "No monthly fees", "Easy setup"].map(
                     (item) => (
                       <p
                         key={item}
-                        className="text-stone-light text-xs flex items-center gap-1"
+                        className="text-parchment text-sm flex items-center gap-2 font-medium"
                       >
-                        <span className="text-gold">✓</span> {item}
+                        <span className="text-gold flex-shrink-0"><ShieldCheck size={16} /></span> {item}
                       </p>
                     ),
                   )}
@@ -263,26 +234,26 @@ export default async function HomePage() {
             </div>
             <div className="flex-shrink-0">
               {isAdmin ? (
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/upload-product"
-                    className="btn-gold inline-flex items-center gap-2"
+                    className="btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base"
                   >
-                    Add Product <ArrowRight size={16} />
+                    Add Product <ArrowRight size={18} />
                   </Link>
                   <Link
                     href="/dashboard"
-                    className="border border-parchment/30 text-parchment px-6 py-3 font-medium hover:bg-parchment/10 transition-all inline-block"
+                    className="border border-parchment/30 text-parchment px-8 py-4 text-base font-medium hover:bg-parchment/10 transition-all inline-flex items-center justify-center"
                   >
-                    Dashboard
+                    Go to Dashboard
                   </Link>
                 </div>
               ) : (
                 <Link
                   href="/signup"
-                  className="btn-gold inline-flex items-center gap-2 text-base px-8 py-4"
+                  className="btn-gold inline-flex items-center gap-2 text-lg px-10 py-5"
                 >
-                  Get Started Free <ArrowRight size={16} />
+                  Get Started Free <ArrowRight size={18} />
                 </Link>
               )}
             </div>
@@ -290,58 +261,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── STATS ── */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <h2 className="font-display text-3xl text-center mb-12 font-light">
-          Trusted by thousands
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { icon: Users, value: "10,000+", label: "Happy Customers" },
-            { icon: Star, value: "2,500+", label: "Active Sellers" },
-            { icon: Leaf, value: "25,000+", label: "Products Sold" },
-            { icon: ShieldCheck, value: "4.8/5", label: "Average Rating" },
-          ].map(({ icon: Icon, value, label }) => (
-            <div key={label} className="text-center">
-              <Icon size={24} className="text-gold mx-auto mb-3" />
-              <p className="font-display text-3xl font-light mb-1">{value}</p>
-              <p className="text-stone text-sm">{label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── FOOTER FEATURES ── */}
-      <section className="border-t border-stone-light bg-parchment">
-        <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            {
-              icon: Truck,
-              title: "Worldwide Shipping",
-              sub: "Fast & reliable delivery",
-            },
-            {
-              icon: RotateCcw,
-              title: "30-Day Returns",
-              sub: "Hassle-free returns",
-            },
-            {
-              icon: Headphones,
-              title: "24/7 Support",
-              sub: "We're here to help",
-            },
-            { icon: Lock, title: "Secure Payments", sub: "Safe & encrypted" },
-          ].map(({ icon: Icon, title, sub }) => (
-            <div key={title} className="flex items-center gap-3">
-              <Icon size={20} className="text-gold flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium">{title}</p>
-                <p className="text-stone text-xs">{sub}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* ── NEWSLETTER ── */}
+      <Newsletter />
     </div>
   );
 }

@@ -58,7 +58,7 @@ body {
   }
 
   .page-container {
-    @apply max-w-7xl mx-auto px-6 py-12;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 py-12;
   }
 
   .shimmer-bg {
@@ -89,5 +89,18 @@ body {
   }
   .animate-delay-400 {
     animation-delay: 400ms;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .mask-edges-right {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
   }
 }

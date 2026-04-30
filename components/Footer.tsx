@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="bg-parchment border-t border-stone-light">
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
 
           {/* Brand */}
@@ -78,29 +78,25 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Trust & Safety */}
           <div>
-            <p className="text-xs tracking-widest font-semibold text-ink mb-5">STAY UPDATED</p>
-            <p className="text-stone text-sm mb-4 leading-relaxed">
-              Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
-            </p>
-            <div className="flex gap-0">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-1 border border-stone-light px-3 py-2 text-sm focus:outline-none focus:border-gold bg-white min-w-0"
-              />
-              <button className="btn-gold px-4 py-2 text-xs tracking-widest flex-shrink-0">
-                Subscribe
-              </button>
-            </div>
+            <p className="text-xs tracking-widest font-semibold text-ink mb-5">TRUST & SAFETY</p>
+            <ul className="space-y-3">
+              {["Authenticity Guarantee", "Secure Payments", "Buyer Protection", "Report an Issue"].map((item) => (
+                <li key={item}>
+                  <Link href="/" className="text-stone text-sm hover:text-ink transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
 
       {/* Bottom Bar */}
       <div className="border-t border-stone-light">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-stone text-xs">© 2024 Atelier. All rights reserved.</p>
 
           {/* Payment icons */}
