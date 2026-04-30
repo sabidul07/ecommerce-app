@@ -2,17 +2,13 @@
   "node": {
     "54411b03d2c2c5169e54f2274665990e4e5cf3da": {
       "workers": {
-        "app/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
+        "app/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "action-browser",
-        "app/login/page": "action-browser",
-        "app/dashboard/page": "action-browser"
+        "app/page": "action-browser"
       }
     }
   },
   "edge": {},
-  "encryptionKey": "HKOfTz9OkSrXaQ3jfQGEQgVn0QAgIH76J8KRW07aROc="
+  "encryptionKey": "+/awv2BjSDDZG/ug90D8mp+nQoM+enDq4zcUSsW2nNc="
 }
