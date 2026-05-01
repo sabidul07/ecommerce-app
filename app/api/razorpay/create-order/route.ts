@@ -17,7 +17,7 @@ function razorpayAuthHeader() {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as CheckoutRequest;
-    const { total, user } = await getVerifiedCheckout(body.items ?? []);
+    const { total, user } = await getVerifiedCheckout(body.items ?? [], body.deliveryMethod);
     const currency = process.env.RAZORPAY_CURRENCY ?? "INR";
     const amount = Math.round(total * 100);
 

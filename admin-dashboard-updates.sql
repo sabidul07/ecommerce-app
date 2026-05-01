@@ -70,3 +70,15 @@ BEGIN
         ON CONFLICT DO NOTHING;
     END IF;
 END $$;
+
+-- Allow users to insert their own payments
+DROP POLICY IF EXISTS "payments: user insert" ON public.payments;
+CREATE POLICY "payments: user insert"
+  ON public.payments FOR INSERT
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.orders
+      WHERE orders.id = payments.order_id
+        AND orders.user_id = auth.uid()
+    )
+  );

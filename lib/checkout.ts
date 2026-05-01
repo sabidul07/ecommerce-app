@@ -7,6 +7,7 @@ export type CheckoutItem = {
 
 export type CheckoutRequest = {
   items?: CheckoutItem[];
+  deliveryMethod?: string;
 };
 
 export class CheckoutError extends Error {
@@ -19,7 +20,7 @@ export class CheckoutError extends Error {
   }
 }
 
-export async function getVerifiedCheckout(items: CheckoutItem[] = []) {
+export async function getVerifiedCheckout(items: CheckoutItem[] = [], deliveryMethod: string = "standard") {
   const validItems = items.filter(
     (item) =>
       typeof item.productId === "string" &&
@@ -61,26 +62,39 @@ export async function getVerifiedCheckout(items: CheckoutItem[] = []) {
     throw new CheckoutError("Some products in your bag are no longer available.");
   }
 
-  const total = products.reduce((sum, product) => {
+  const subtotal = products.reduce((sum, product) => {
     const quantity = quantities.get(product.id) ?? 0;
     return sum + Number(product.price) * quantity;
   }, 0);
+
+  // Calculate tax and shipping server-side to match frontend
+  const tax = subtotal * 0.18;
+  const shipping = deliveryMethod === "express" ? 250 : (subtotal > 2000 ? 0 : 150);
+  const total = subtotal + tax + shipping;
 
   return {
     productIds,
     quantities,
     supabase,
+    subtotal,
+    tax,
+    shipping,
     total,
     user,
   };
 }
 
-export async function createMarketplaceOrder(items: CheckoutItem[]) {
-  const { productIds, quantities, supabase, total, user } = await getVerifiedCheckout(items);
+export async function createMarketplaceOrder(items: CheckoutItem[], deliveryMethod: string = "standard") {
+  const { productIds, quantities, supabase, total, user } = await getVerifiedCheckout(items, deliveryMethod);
 
+  // Insert order with 'Paid' status since this is called after payment verification
   const { data: order, error: orderError } = await supabase
     .from("orders")
-    .insert({ user_id: user.id, total })
+    .insert({ 
+      user_id: user.id, 
+      total,
+      status: 'Paid' // Update status to Paid
+    })
     .select("id")
     .single();
 
@@ -103,6 +117,13 @@ export async function createMarketplaceOrder(items: CheckoutItem[]) {
     await supabase.from("orders").delete().eq("id", order.id);
     throw new CheckoutError(`Failed to process order items: ${itemsError.message}`, 500);
   }
+
+  // Record payment in the payments table for the admin dashboard
+  await supabase.from("payments").insert({
+    order_id: order.id,
+    amount: total,
+    status: 'Succeeded'
+  });
 
   return { orderId: order.id, total };
 }

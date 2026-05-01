@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     }
 
     const [{ total }, razorpayOrder] = await Promise.all([
-      getVerifiedCheckout(body.items ?? []),
+      getVerifiedCheckout(body.items ?? [], body.deliveryMethod),
       getRazorpayOrder(razorpayOrderId),
     ]);
 
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       throw new CheckoutError("Payment amount does not match your bag total.", 400);
     }
 
-    const order = await createMarketplaceOrder(body.items ?? []);
+    const order = await createMarketplaceOrder(body.items ?? [], body.deliveryMethod);
 
     return NextResponse.json({
       orderId: order.orderId,

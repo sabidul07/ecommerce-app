@@ -142,7 +142,11 @@ export default function CheckoutPage() {
           const verifyRes = await fetch("/api/razorpay/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...paymentResponse, items }),
+            body: JSON.stringify({ 
+              ...paymentResponse, 
+              items: items.map(i => ({ productId: i.product.id, quantity: i.quantity })), 
+              deliveryMethod 
+            }),
           });
           
           if (verifyRes.ok) {
@@ -150,7 +154,8 @@ export default function CheckoutPage() {
             setSuccess(true);
             clearCart();
           } else {
-            setError("Payment verification failed.");
+            const errorData = await verifyRes.json();
+            setError(errorData.error || "Payment verification failed.");
           }
           setLoading(false);
         },
