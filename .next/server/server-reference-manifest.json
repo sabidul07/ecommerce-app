@@ -3,23 +3,13 @@
     "54411b03d2c2c5169e54f2274665990e4e5cf3da": {
       "workers": {
         "app/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/signup/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/cart/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/products/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/checkout/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Finventory.ts%22%2C%5B%22restockProduct%22%5D%5D%2C%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/_not-found/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
+        "app/profile/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
+        "app/dashboard/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Finventory.ts%22%2C%5B%22restockProduct%22%5D%5D%2C%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
         "app/page": "action-browser",
-        "app/signup/page": "action-browser",
-        "app/login/page": "action-browser",
-        "app/cart/page": "action-browser",
-        "app/products/page": "action-browser",
-        "app/checkout/page": "action-browser",
-        "app/dashboard/page": "action-browser",
-        "app/_not-found/page": "action-browser"
+        "app/profile/page": "action-browser",
+        "app/dashboard/page": "action-browser"
       }
     },
     "f806fc52a6c0990a7bcb34863f617e55147d7925": {
@@ -32,5 +22,5 @@
     }
   },
   "edge": {},
-  "encryptionKey": "zKB8XN5wNULJRNFhteF26q5T6ogP8lsCZWv6DaBaeFM="
+  "encryptionKey": "BGTZL/c8uEEnlPCpjgCvpepyF6isI/BDB7j7WlaoeGk="
 }

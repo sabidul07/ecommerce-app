@@ -191,12 +191,29 @@ export default async function DashboardPage() {
     );
   }
 
-  // --- USER DASHBOARD (SAME AS BEFORE BUT CLEANED) ---
+  // --- USER DASHBOARD ---
   const { data: userOrders } = await supabase
     .from("orders")
-    .select("*, order_items(*, products(title, price))")
+    .select(`
+      *,
+      order_items (
+        id,
+        quantity,
+        products (
+          title,
+          price
+        )
+      )
+    `)
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
+
+  const statusColors: Record<string, string> = {
+    Paid: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+    Shipped: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+    Pending: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+    Cancelled: "bg-rose-500/10 text-rose-600 border-rose-500/20",
+  };
 
   return (
     <div className="page-container py-12">
@@ -234,19 +251,24 @@ export default async function DashboardPage() {
         ) : (
           <div className="space-y-4">
             {userOrders.map((order) => (
-              <div key={order.id} className="card">
-                <div className="flex items-center justify-between mb-4">
+              <div key={order.id} className="card border-stone-light hover:border-gold/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
                   <div>
-                    <p className="text-xs text-stone tracking-widest uppercase">Order #{order.id.slice(0, 8)}</p>
-                    <p className="text-xs text-stone">{new Date(order.created_at).toLocaleDateString()}</p>
+                    <div className="flex items-center gap-3 mb-1">
+                      <p className="text-xs text-stone tracking-widest uppercase font-bold">Order #{order.id.slice(0, 8)}</p>
+                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border ${statusColors[order.status] || statusColors.Pending}`}>
+                        {order.status || "Pending"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone">{new Date(order.created_at).toLocaleDateString("en-IN", { dateStyle: "long" })}</p>
                   </div>
-                  <p className="font-display text-xl">₹{Number(order.total).toFixed(2)}</p>
+                  <p className="font-display text-xl text-ink">₹{Number(order.total).toLocaleString()}</p>
                 </div>
-                <div className="border-t border-stone-light pt-3 space-y-1">
+                <div className="border-t border-stone-light pt-4 space-y-3">
                   {order.order_items?.map((item: any) => (
-                    <div key={item.id} className="flex justify-between text-sm text-stone">
-                      <span>{item.products?.title} × {item.quantity}</span>
-                      <span>₹{(item.products?.price * item.quantity).toFixed(2)}</span>
+                    <div key={item.id} className="flex justify-between text-sm">
+                      <span className="text-ink">{item.products?.title} <span className="text-stone-light ml-1">× {item.quantity}</span></span>
+                      <span className="text-stone font-medium">₹{(item.products?.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>

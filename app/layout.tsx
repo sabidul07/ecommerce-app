@@ -54,7 +54,7 @@ export default function RootLayout({
       <body>
         <CartProvider>
           <Navbar />
-          <main>{children}</main>
+          <main className="">{children}</main>
           <Footer />
           <BackToTop />
         </CartProvider>

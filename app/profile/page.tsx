@@ -16,6 +16,8 @@ export const metadata = {
 const SECTION = "border border-stone-light p-4 lg:p-6 space-y-6";
 const SECTION_TITLE = "font-display text-xl font-light text-ink";
 
+import AccountLayout from "@/app/account/layout";
+
 export default async function ProfilePage() {
   const supabase = createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -44,11 +46,10 @@ export default async function ProfilePage() {
     .split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <main className="bg-parchment min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 space-y-10">
-
+    <AccountLayout>
+      <div className="space-y-10 animate-fade-in">
         {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pb-10 border-b border-stone-light">
           <div className="w-20 h-20 rounded-full bg-gold/10 border-2 border-gold/30 flex items-center justify-center shrink-0">
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="avatar" className="w-20 h-20 rounded-full object-cover" />
@@ -57,76 +58,82 @@ export default async function ProfilePage() {
             )}
           </div>
           <div>
-            <h1 className="font-display text-3xl font-light text-ink">
+            <h1 className="font-display text-4xl font-light text-ink">
               {profile?.full_name || "Your Profile"}
             </h1>
             <p className="text-stone text-sm mt-0.5">{user.email}</p>
-            <p className="text-stone text-xs mt-1">Member since {memberSince}</p>
+            <p className="text-stone text-xs mt-1 uppercase tracking-widest opacity-60">Member since {memberSince}</p>
           </div>
         </div>
 
-        {/* ── Personal Information ── */}
-        <div className={SECTION}>
-          <div>
-            <h2 className={SECTION_TITLE}>Personal Information</h2>
-            <p className="text-stone text-xs mt-1">Changes to your email will require re-verification.</p>
+        {/* ── Grid Layout for sections ── */}
+        <div className="grid grid-cols-1 gap-12">
+          {/* ── Personal Information ── */}
+          <div className={SECTION}>
+            <div>
+              <h2 className={SECTION_TITLE}>Personal Information</h2>
+              <p className="text-stone text-xs mt-1">Changes to your email will require re-verification.</p>
+            </div>
+            <AvatarUpload
+              userId={user.id}
+              avatarUrl={profile?.avatar_url ?? null}
+              fullName={profile?.full_name ?? ""}
+            />
+            <PersonalInfoForm
+              userId={user.id}
+              initialData={{
+                full_name: profile?.full_name ?? "",
+                phone: profile?.phone ?? "",
+                email: user.email ?? "",
+              }}
+            />
           </div>
-          <AvatarUpload
-            userId={user.id}
-            avatarUrl={profile?.avatar_url ?? null}
-            fullName={profile?.full_name ?? ""}
-          />
-          <PersonalInfoForm
-            userId={user.id}
-            initialData={{
-              full_name: profile?.full_name ?? "",
-              phone: profile?.phone ?? "",
-              email: user.email ?? "",
-            }}
-          />
-        </div>
 
-        {/* ── Saved Addresses ── */}
-        <div id="addresses" className={SECTION}>
-          <h2 className={SECTION_TITLE}>Saved Addresses</h2>
-          <AddressManager
-            userId={user.id}
-            initialAddresses={addresses ?? []}
-          />
-        </div>
+          {/* ── Saved Addresses ── */}
+          <div id="addresses" className={SECTION}>
+            <h2 className={SECTION_TITLE}>Saved Addresses</h2>
+            <AddressManager
+              userId={user.id}
+              initialAddresses={addresses ?? []}
+            />
+          </div>
 
-        {/* ── Change Password ── */}
-        <div className="space-y-2">
-          <h2 className={SECTION_TITLE}>Change Password</h2>
-          <ChangePassword isOAuthUser={isOAuthUser} />
-        </div>
+          <div className="grid md:grid-cols-2 gap-10">
+            {/* ── Notification Preferences ── */}
+            <div className={SECTION}>
+              <h2 className={SECTION_TITLE}>Notifications</h2>
+              <NotificationPrefs
+                userId={user.id}
+                initialPrefs={notificationPrefs}
+              />
+            </div>
 
-        {/* ── Notification Preferences ── */}
-        <div className={SECTION}>
-          <h2 className={SECTION_TITLE}>Notification Preferences</h2>
-          <NotificationPrefs
-            userId={user.id}
-            initialPrefs={notificationPrefs}
-          />
-        </div>
+            {/* ── Account Security ── */}
+            <div className={SECTION}>
+              <h2 className={SECTION_TITLE}>Security</h2>
+              <AccountSecurity
+                provider={provider}
+                lastLogin={lastLogin}
+                email={user.email ?? ""}
+              />
+            </div>
+          </div>
 
-        {/* ── Account Security ── */}
-        <div className={SECTION}>
-          <h2 className={SECTION_TITLE}>Account Security</h2>
-          <AccountSecurity
-            provider={provider}
-            lastLogin={lastLogin}
-            email={user.email ?? ""}
-          />
-        </div>
+          {/* ── Change Password ── */}
+          <div className="bg-parchment/50 border border-stone-light p-6 lg:p-8 rounded-2xl">
+            <h2 className={SECTION_TITLE}>Update Password</h2>
+            <p className="text-stone text-xs mb-6">Ensure your account is using a long, random password to stay secure.</p>
+            <ChangePassword isOAuthUser={isOAuthUser} />
+          </div>
 
-        {/* ── Danger Zone ── */}
-        <div className="space-y-3">
-          <h2 className={`${SECTION_TITLE} text-rust`}>Danger Zone</h2>
-          <DangerZone email={user.email ?? ""} />
+          {/* ── Danger Zone ── */}
+          <div className="pt-10 border-t border-rust/10">
+            <h2 className={`${SECTION_TITLE} text-rust`}>Danger Zone</h2>
+            <p className="text-stone text-xs mt-1 mb-6">Permanently delete your account and all associated data.</p>
+            <DangerZone email={user.email ?? ""} />
+          </div>
         </div>
-
       </div>
-    </main>
+    </AccountLayout>
   );
 }
