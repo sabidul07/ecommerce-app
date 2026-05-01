@@ -431,7 +431,6 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-ink leading-tight mb-1">{product.title}</p>
-                    <p className="text-xs text-stone uppercase tracking-widest">{product.category}</p>
                   </div>
                   <p className="text-sm font-medium text-ink">₹{(product.price * quantity).toLocaleString()}</p>
                 </div>

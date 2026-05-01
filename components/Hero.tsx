@@ -79,7 +79,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           className="hidden lg:block relative h-[500px]"
         >
           {/* Card 1 — Ceramics (top-right, slight rotate) */}
-          <div className="absolute top-0 right-12 w-64 h-80 rounded-xl overflow-hidden border border-gold/20 shadow-2xl z-10 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="absolute top-0 right-12 w-64 h-80 rounded-[8px] overflow-hidden border border-gold/20 shadow-2xl z-10 transform rotate-2 hover:rotate-0 transition-transform duration-500">
             <Image
               src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?q=80&w=600&auto=format&fit=crop"
               alt="Handmade ceramics"
@@ -89,7 +89,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
             />
           </div>
           {/* Card 2 — Jewelry (bottom-left, slight counter-rotate) */}
-          <div className="absolute bottom-4 left-12 w-56 h-72 rounded-xl overflow-hidden border border-gold/20 shadow-2xl z-20 transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="absolute bottom-4 left-12 w-56 h-72 rounded-[8px] overflow-hidden border border-gold/20 shadow-2xl z-20 transform -rotate-2 hover:rotate-0 transition-transform duration-500">
             <Image
               src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop"
               alt="Artisan jewellery"
@@ -98,11 +98,11 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
               className="object-cover"
             />
           </div>
-          {/* Card 3 — Woven textiles (background, lower opacity) */}
-          <div className="absolute top-20 left-4 w-40 h-48 rounded-xl overflow-hidden border border-gold/20 shadow-xl z-0 opacity-70">
+          {/* Card 3 — Handcrafted (background, lower opacity) */}
+          <div className="absolute top-20 left-4 w-40 h-48 rounded-[8px] overflow-hidden border border-gold/20 shadow-xl z-0 opacity-70 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
             <Image
-              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=400&auto=format&fit=crop"
-              alt="Handwoven textiles"
+              src="https://images.unsplash.com/photo-1610701596007-11502861dcff?q=80&w=400&auto=format&fit=crop"
+              alt="Handcrafted ceramics"
               fill
               unoptimized
               className="object-cover"

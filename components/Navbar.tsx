@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingBag, User, LogOut, Package, UploadCloud, Search } from "lucide-react";
+import { ShoppingBag, User, LogOut, Package, UploadCloud, Search, Truck, MapPin, Heart, LayoutDashboard } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { createClient } from "@/lib/supabase";
 import { useEffect, useState, startTransition } from "react";
@@ -157,54 +157,41 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center gap-2 hover:text-gold transition-colors text-sm tracking-wide text-stone hover:text-ink"
+                className="flex items-center justify-center w-10 h-10 hover:text-gold transition-colors text-stone hover:text-ink"
+                aria-label="Account menu"
               >
                 <User size={20} />
-                <span className="hidden md:inline font-medium">My Account</span>
               </button>
               {menuOpen && (
-                <div className="absolute right-0 top-full mt-3 w-56 bg-white border border-stone-light shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-lg overflow-hidden">
-                  {/* Initials + email header */}
-                  <div className="px-4 py-3 border-b border-stone-light flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center shrink-0">
-                      <span className="text-[10px] font-semibold text-gold">
-                        {(fullName || user.email || "?").split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      {fullName && <p className="text-xs font-medium text-ink truncate">{fullName}</p>}
-                      <p className="text-xs text-stone truncate">{user.email}</p>
-                      {isAdmin && <p className="text-[10px] text-gold font-semibold tracking-wide mt-0.5">Admin</p>}
-                    </div>
+                <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-stone-light shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-lg overflow-hidden">
+                  <div className="px-5 py-4 border-b border-stone-light bg-parchment/30">
+                    <p className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mb-1">Signed in as</p>
+                    <p className="text-xs font-semibold text-ink truncate">{user.email}</p>
                   </div>
-                  <Link
-                    href="/profile"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-parchment transition-colors"
-                  >
-                    <User size={14} /> Profile
-                  </Link>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-parchment transition-colors"
-                  >
-                    <Package size={14} /> Dashboard
-                  </Link>
-                  {isAdmin && (
-                    <Link
-                      href="/upload-product"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-parchment transition-colors"
-                    >
-                      <UploadCloud size={14} /> Add Product
+                  
+                  <div className="py-2">
+                    <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
+                      <User size={16} /> My profile
                     </Link>
-                  )}
-                  <div className="border-t border-stone-light">
+                    <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
+                      <Truck size={16} /> My orders
+                    </Link>
+                    <Link href="/profile#addresses" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
+                      <MapPin size={16} /> Saved addresses
+                    </Link>
+                    <Link href="/products" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
+                      <Heart size={16} /> Wishlist
+                    </Link>
+                    <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors border-t border-stone-light mt-2 pt-4">
+                      <LayoutDashboard size={16} /> Dashboard
+                    </Link>
+                  </div>
+
+                  <div className="border-t border-stone-light mt-2">
                     <button
                       onClick={handleSignOut}
                       disabled={signingOut}
-                      className="w-full flex items-center gap-2 px-4 py-3 text-sm text-rust hover:bg-parchment transition-colors disabled:opacity-50"
+                      className="w-full flex items-center gap-3 px-5 py-4 text-sm font-medium text-rust hover:bg-parchment transition-colors disabled:opacity-50"
                     >
                       {signingOut ? (
                         <>
@@ -212,7 +199,7 @@ export default function Navbar() {
                           Signing out...
                         </>
                       ) : (
-                        <><LogOut size={14} /> Sign Out</>
+                        <><LogOut size={16} /> Sign out</>
                       )}
                     </button>
                   </div>
@@ -222,10 +209,10 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="text-sm tracking-wide font-medium text-stone hover:text-ink transition-colors flex items-center gap-2"
+              className="flex items-center justify-center w-10 h-10 hover:text-gold transition-colors text-stone hover:text-ink"
+              aria-label="Sign in"
             >
               <User size={20} />
-              <span className="hidden md:inline">Sign In</span>
             </Link>
           )}
         </div>

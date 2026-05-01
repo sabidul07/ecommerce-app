@@ -87,7 +87,7 @@ export default async function ProfilePage() {
         </div>
 
         {/* ── Saved Addresses ── */}
-        <div className={SECTION}>
+        <div id="addresses" className={SECTION}>
           <h2 className={SECTION_TITLE}>Saved Addresses</h2>
           <AddressManager
             userId={user.id}
