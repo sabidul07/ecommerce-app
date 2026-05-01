@@ -101,7 +101,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           {/* Card 3 — Handcrafted (background, lower opacity) */}
           <div className="absolute top-20 left-4 w-40 h-48 rounded-[8px] overflow-hidden border border-gold/20 shadow-xl z-0 opacity-70 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
             <Image
-              src="https://images.unsplash.com/photo-1610701596007-11502861dcff?q=80&w=400&auto=format&fit=crop"
+              src="https://images.unsplash.com/photo-1771248686392-efddd468e0cf?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Handcrafted ceramics"
               fill
               unoptimized

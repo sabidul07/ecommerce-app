@@ -1,188 +1,184 @@
-import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { redirect } from "next/navigation";
-import Link from "next/link";
+"use client";
+
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase";
 import { 
   Plus, 
   Search, 
   Filter, 
-  MoreHorizontal, 
-  Eye, 
-  Copy, 
+  MoreVertical, 
+  Edit, 
   Trash2, 
-  ChevronDown,
-  Star
+  Package, 
+  DollarSign, 
+  Star,
+  ExternalLink
 } from "lucide-react";
-import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
-export const revalidate = 0;
+export default function AdminProductsPage() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const supabase = createClient();
 
-export default async function AdminProductsPage({
-  searchParams,
-}: {
-  searchParams: { q?: string; category?: string; status?: string };
-}) {
-  const supabase = createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-  if (!user) redirect("/login");
+  const fetchProducts = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-  // Admin Check
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile?.is_admin) redirect("/dashboard");
-
-  // Fetch Products with filters
-  let query = supabase
-    .from("products")
-    .select("*, categories(name)")
-    .order("created_at", { ascending: false });
-
-  if (searchParams.q) {
-    query = query.ilike("title", `%${searchParams.q}%`);
-  }
-  if (searchParams.status) {
-    query = query.eq("status", searchParams.status);
-  }
-
-  const { data: products } = await query;
-  const { data: categories } = await supabase.from("categories").select("*");
-
-  const statusColors: Record<string, string> = {
-    Active: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    Draft: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    Archived: "bg-stone-500/10 text-stone-400 border-stone-500/20",
+    if (!error) setProducts(data || []);
+    setLoading(false);
   };
 
+  const deleteProduct = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this product?")) return;
+    
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (!error) {
+      setProducts(products.filter(p => p.id !== id));
+    }
+  };
+
+  const filteredProducts = products.filter(p => 
+    p.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-parchment pb-20">
-      <div className="max-w-7xl mx-auto px-6 pt-12">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-          <div>
-            <h1 className="text-4xl font-bold text-white">Products</h1>
-            <p className="text-stone-500 mt-2">Manage your inventory, pricing, and visibility.</p>
-          </div>
-          <Link 
-            href="/admin/products/new" 
-            className="flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full text-sm font-bold hover:bg-gold transition-all shadow-lg hover:shadow-gold/20"
-          >
-            <Plus size={18} />
-            New Product
-          </Link>
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div>
+          <h1 className="text-4xl font-bold text-white font-display">Inventory</h1>
+          <p className="text-stone-500 text-sm mt-1">Manage your boutique collection and stock levels.</p>
         </div>
+        <Link 
+          href="/admin/products/new"
+          className="flex items-center gap-2 bg-gold text-black px-6 py-3 rounded-xl text-sm font-bold hover:bg-gold-light transition-all shadow-lg shadow-gold/10 w-fit"
+        >
+          <Plus size={18} /> Add New Product
+        </Link>
+      </div>
 
-        {/* Filters Bar */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search products..." 
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-gold transition-colors"
-              defaultValue={searchParams.q}
-            />
-          </div>
-          <div className="flex gap-4">
-            <select className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold appearance-none min-w-[140px]">
-              <option value="">All Categories</option>
-              {categories?.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-            <select className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold appearance-none min-w-[140px]">
-              <option value="">All Status</option>
-              <option value="Active">Active</option>
-              <option value="Draft">Draft</option>
-              <option value="Archived">Archived</option>
-            </select>
-          </div>
+      {/* Toolbar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white/5 p-4 rounded-2xl border border-white/10 mb-8">
+        <div className="flex flex-1 items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus-within:border-gold transition-colors">
+          <Search size={18} className="text-stone-500" />
+          <input 
+            type="text" 
+            placeholder="Search products by title..." 
+            className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-stone-600"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-
-        {/* Products Table */}
-        <div className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden backdrop-blur-xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-stone-500 text-[11px] uppercase tracking-[0.2em] border-b border-white/5">
-                  <th className="px-6 py-5 font-medium"><input type="checkbox" className="rounded bg-white/10 border-white/20" /></th>
-                  <th className="px-6 py-5 font-medium">Product</th>
-                  <th className="px-6 py-5 font-medium">Category</th>
-                  <th className="px-6 py-5 font-medium">Price</th>
-                  <th className="px-6 py-5 font-medium">Inventory</th>
-                  <th className="px-6 py-5 font-medium">Status</th>
-                  <th className="px-6 py-5 font-medium"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {products?.map((product) => (
-                  <tr key={product.id} className="group hover:bg-white/[0.02] transition-colors">
-                    <td className="px-6 py-4">
-                      <input type="checkbox" className="rounded bg-white/10 border-white/20" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-lg bg-white/5 overflow-hidden relative border border-white/10">
-                          {product.image && (
-                            <Image src={product.image} alt={product.title} fill className="object-cover" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm text-white font-medium group-hover:text-gold transition-colors">{product.title}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            {product.is_featured && <Star size={10} className="text-gold fill-gold" />}
-                            <span className="text-[10px] text-stone-500 font-mono uppercase">{product.id.slice(0, 8)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-xs text-stone-400">{product.categories?.name || "Uncategorized"}</span>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium text-white">
-                      ₹{Number(product.price).toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-medium ${product.inventory_count < 10 ? 'text-rose-400' : 'text-stone-400'}`}>
-                          {product.inventory_count} in stock
-                        </span>
-                        {product.inventory_count < 10 && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold border ${statusColors[product.status] || statusColors.Draft}`}>
-                        {product.status || "Draft"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="relative inline-block text-left">
-                        <button className="p-2 hover:bg-white/5 rounded-lg text-stone-500 hover:text-white transition-colors">
-                          <MoreHorizontal size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          
-          {/* Pagination */}
-          <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between text-xs text-stone-500">
-            <p>Showing {products?.length || 0} products</p>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50" disabled>Previous</button>
-              <button className="px-4 py-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50" disabled>Next</button>
-            </div>
-          </div>
+        <div className="flex items-center gap-3">
+           <button className="flex items-center gap-2 bg-white/5 text-stone-400 px-4 py-2 rounded-xl text-sm border border-white/10 hover:text-white transition-all">
+             <Filter size={16} /> Filters
+           </button>
+           <p className="text-xs text-stone-600 font-medium px-2 uppercase tracking-widest">{filteredProducts.length} Products Total</p>
         </div>
       </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <AnimatePresence mode="popLayout">
+          {loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-64 bg-white/5 rounded-2xl animate-pulse border border-white/10" />
+            ))
+          ) : filteredProducts.map((product) => (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              key={product.id}
+              className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-gold/30 transition-all shadow-xl"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden bg-black">
+                {product.image ? (
+                  <img 
+                    src={product.image} 
+                    alt={product.title} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-stone-700">
+                    <Package size={48} />
+                  </div>
+                )}
+                
+                {/* Overlay Actions */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 transition-transform">
+                   <Link 
+                     href={`/admin/products/${product.id}/edit`}
+                     className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-gold transition-colors shadow-xl"
+                   >
+                     <Edit size={18} />
+                   </Link>
+                   <button 
+                     onClick={() => deleteProduct(product.id)}
+                     className="w-10 h-10 bg-rose-500 text-white rounded-full flex items-center justify-center hover:bg-rose-600 transition-colors shadow-xl"
+                   >
+                     <Trash2 size={18} />
+                   </button>
+                </div>
+
+                {product.is_featured && (
+                  <div className="absolute top-4 left-4 bg-gold text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                    <Star size={10} fill="currentColor" /> Featured
+                  </div>
+                )}
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-lg font-bold text-white group-hover:text-gold transition-colors line-clamp-1">{product.title}</h3>
+                  <p className="text-xl font-display font-bold text-white">₹{Number(product.price).toLocaleString()}</p>
+                </div>
+                
+                <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                   <div className="flex items-center gap-4">
+                      <div className="flex flex-col">
+                         <span className="text-[10px] text-stone-500 uppercase tracking-widest">Status</span>
+                         <span className="text-xs text-emerald-500 font-bold">In Stock</span>
+                      </div>
+                      <div className="flex flex-col border-l border-white/10 pl-4">
+                         <span className="text-[10px] text-stone-500 uppercase tracking-widest">Inventory</span>
+                         <span className="text-xs text-white font-bold">24 Units</span>
+                      </div>
+                   </div>
+                   <Link 
+                     href={`/products/${product.id}`} 
+                     target="_blank"
+                     className="text-stone-500 hover:text-white transition-colors"
+                   >
+                     <ExternalLink size={16} />
+                   </Link>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {!loading && filteredProducts.length === 0 && (
+        <div className="py-32 text-center">
+           <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Package size={32} className="text-stone-600" />
+           </div>
+           <h3 className="text-white text-xl font-bold mb-2">No products found</h3>
+           <p className="text-stone-500 max-w-sm mx-auto">Try adjusting your search term or add a new product to your inventory.</p>
+        </div>
+      )}
     </div>
   );
 }

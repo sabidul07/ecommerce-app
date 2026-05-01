@@ -27,8 +27,14 @@ export default async function ProductsPage() {
 
   if (error) {
     return (
-      <div className="page-container text-center py-24">
-        <p className="text-rust">Failed to load products. Please try again.</p>
+      <div className="page-container text-center py-24 bg-rose-500/5 rounded-2xl border border-rose-500/10 max-w-2xl mx-auto mt-20">
+        <h2 className="text-rose-500 font-bold mb-4 text-xl">Database Access Error</h2>
+        <pre className="text-rose-400/80 text-xs bg-black/40 p-6 rounded-xl overflow-x-auto text-left mb-6">
+          {JSON.stringify(error, null, 2)}
+        </pre>
+        <p className="text-stone-500 text-sm">
+          Please check your Supabase RLS policies and .env settings.
+        </p>
       </div>
     );
   }
