@@ -48,7 +48,7 @@ export default function SignupPage() {
           password,
         });
         if (!signInError) {
-          router.push("/dashboard");
+          router.push("/account/orders");
           router.refresh();
           return;
         }
@@ -85,7 +85,7 @@ export default function SignupPage() {
 
     // If email confirmation is disabled, redirect to dashboard
     if (data.session) {
-      router.push("/dashboard");
+      router.push("/account/orders");
       router.refresh();
     }
   };

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { User, Package, ExternalLink, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { restockProduct } from "@/app/actions/inventory";
 
 // --- Restock Button Component ---
@@ -140,6 +140,19 @@ export function LowStockAlerts({ items }: { items: any[] }) {
   );
 }
 
+// --- Hydration-safe Time Component ---
+function ClientTime({ date }: { date: string }) {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <span className="opacity-0">...</span>;
+  
+  return <span>{new Date(date).toLocaleTimeString()}</span>;
+}
+
 // --- New Customers Feed ---
 export function NewCustomersFeed({ customers }: { customers: any[] }) {
   return (
@@ -154,7 +167,7 @@ export function NewCustomersFeed({ customers }: { customers: any[] }) {
             <div>
               <p className="text-sm text-stone-200 font-medium">{customer.name || "Unnamed User"}</p>
               <p className="text-[10px] text-stone-500">{customer.email}</p>
-              <p className="text-[9px] text-stone-600 mt-1">Joined {new Date(customer.created_at).toLocaleTimeString()}</p>
+              <p className="text-[9px] text-stone-600 mt-1">Joined <ClientTime date={customer.created_at} /></p>
             </div>
           </div>
         ))}

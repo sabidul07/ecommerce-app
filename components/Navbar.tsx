@@ -173,7 +173,7 @@ export default function Navbar() {
                     <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <User size={16} /> My profile
                     </Link>
-                    <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
+                    <Link href="/account/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <Truck size={16} /> My orders
                     </Link>
                     <Link href="/profile#addresses" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
@@ -182,8 +182,8 @@ export default function Navbar() {
                     <Link href="/products" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <Heart size={16} /> Wishlist
                     </Link>
-                    <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors border-t border-stone-light mt-2 pt-4">
-                      <LayoutDashboard size={16} /> Dashboard
+                    <Link href="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors border-t border-stone-light mt-2 pt-4">
+                      <LayoutDashboard size={16} /> Admin Panel
                     </Link>
                   </div>
 

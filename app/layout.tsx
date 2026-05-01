@@ -53,10 +53,7 @@ export default function RootLayout({
       </head>
       <body>
         <CartProvider>
-          <Navbar />
-          <main className="">{children}</main>
-          <Footer />
-          <BackToTop />
+          {children}
         </CartProvider>
       </body>
     </html>

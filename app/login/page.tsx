@@ -29,7 +29,18 @@ export default function LoginPage() {
       setError(authError.message);
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      // After login, check if admin and redirect
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", (await supabase.auth.getUser()).data.user?.id)
+        .single();
+
+      if (profile?.is_admin) {
+        router.push("/admin");
+      } else {
+        router.push("/account/orders");
+      }
       router.refresh();
     }
   };
