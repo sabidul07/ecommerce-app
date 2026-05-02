@@ -21,7 +21,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group card-hover flex flex-col">
+    <div className="group card-hover flex flex-col p-4">
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-stone-light mb-4">
         {product.image ? (
@@ -56,11 +56,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
           <button
             onClick={handleAddToCart}
-            className={`text-xs tracking-widest px-4 py-2 transition-all duration-300 ${
-              added
-                ? "bg-sage text-parchment"
-                : "bg-ink text-parchment hover:bg-stone-dark"
-            }`}
+            className={`text-xs tracking-widest px-4 py-2 transition-all duration-300 ${added
+              ? "bg-sage text-parchment"
+              : "bg-ink text-parchment hover:bg-stone-dark"
+              }`}
           >
             {added ? "ADDED ✓" : "ADD TO BAG"}
           </button>

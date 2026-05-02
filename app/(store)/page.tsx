@@ -251,7 +251,7 @@ export default async function HomePage() {
               ) : (
                 <Link
                   href="/signup"
-                  className="btn-gold inline-flex items-center gap-2 text-lg px-5 xl:px-10 py-5 w-full"
+                  className="btn-gold inline-flex items-center gap-2 max-sm:justify-between sm:text-lg px-5 xl:px-10 py-3 lg:py-4 xl:py-5 w-full"
                 >
                   Get Started Free <ArrowRight size={18} />
                 </Link>

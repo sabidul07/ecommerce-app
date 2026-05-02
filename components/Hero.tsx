@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowRight, Leaf, ShieldCheck, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { items } from "./commons.tsx/helper";
+
 
 export default function Hero({ isAdmin }: { isAdmin: boolean }) {
   const staggerContainer = {
@@ -49,7 +51,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           <motion.div variants={fadeInUp} className="flex gap-4 flex-wrap">
             <Link
               href="/products"
-              className="btn-gold inline-flex items-center justify-center gap-2 px-4 lg:p-6 xl:px-8 py-4 text-sm max-sm:flex-1"
+              className="btn-gold inline-flex items-center justify-center gap-2 px-4 lg:p-4 xl:px-6 py-4 text-sm max-sm:flex-1"
             >
               Browse Collection <ArrowRight size={16} />
             </Link>
@@ -142,23 +144,38 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
       </div>
 
       {/* Trust Strip */}
-      <div className="absolute bottom-0 left-0 right-0 border-t border-parchment/10 bg-parchment/5 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex gap-12 overflow-x-auto no-scrollbar">
-          {[
-            { icon: Leaf, text: "Curated Quality", sub: "Handpicked with care" },
-            { icon: ShieldCheck, text: "Secure Payments", sub: "100% protected" },
-            { icon: Users, text: "Support Artisans", sub: "Empower creativity" },
-          ].map(({ icon: Icon, text, sub }) => (
-            <div key={text} className="flex items-center gap-4 flex-shrink-0">
-              <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-                <Icon size={20} className="text-gold" />
+      <div className="absolute bottom-0 left-0 right-0 border-t border-parchment/10 bg-parchment/5 backdrop-blur-md overflow-hidden">
+        <div className="py-5">
+          <motion.div
+            className="flex gap-12 w-max px-6"
+            animate={{
+              x: ["0%", "-33.33%"], // Move by one full set of items
+            }}
+            transition={{
+              ease: "linear",
+              duration: 15, // Lower is faster
+              repeat: Infinity,
+            }}
+          >
+            {items.map(({ icon: Icon, text, sub }, index) => (
+              <div
+                key={`${text}-${index}`}
+                className="flex items-center gap-4 flex-shrink-0"
+              >
+                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+                  <Icon size={20} className="text-gold" />
+                </div>
+                <div>
+                  <p className="text-parchment text-sm font-semibold tracking-wide whitespace-nowrap">
+                    {text}
+                  </p>
+                  <p className="text-stone-300 text-xs whitespace-nowrap">
+                    {sub}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-parchment text-sm font-semibold tracking-wide">{text}</p>
-                <p className="text-stone-300 text-xs">{sub}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>
