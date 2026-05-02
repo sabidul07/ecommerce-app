@@ -63,7 +63,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
             ) : (
               <Link
                 href="/signup"
-                className="border border-parchment/30 text-parchment px-4 lg:p-6 xl:px-8 py-4 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
+                className="btn-boutique"
               >
                 Start Selling
               </Link>

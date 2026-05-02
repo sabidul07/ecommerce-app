@@ -8,26 +8,16 @@ import {
   Download, 
   ChevronRight, 
   Eye, 
-  MoreVertical,
-  CheckCircle2,
-  Clock,
-  Truck,
-  XCircle,
   Package,
-  Calendar
+  Calendar,
+  RotateCcw
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import StatusPill from "@/components/ui/StatusPill";
 
 const statuses = ["All", "Pending", "Paid", "Shipped", "Delivered", "Cancelled"];
 
-const statusConfig: Record<string, { color: string; icon: any }> = {
-  Pending: { color: "text-amber-400 bg-amber-400/20 border-amber-400/30", icon: Clock },
-  Paid: { color: "text-emerald-400 bg-emerald-400/20 border-emerald-400/30", icon: CheckCircle2 },
-  Shipped: { color: "text-blue-400 bg-blue-400/20 border-blue-400/30", icon: Truck },
-  Delivered: { color: "text-indigo-400 bg-indigo-400/20 border-indigo-400/30", icon: Package },
-  Cancelled: { color: "text-rose-400 bg-rose-400/20 border-rose-400/30", icon: XCircle },
-};
 
 export default function OrdersTable() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -181,8 +171,6 @@ export default function OrdersTable() {
                     </tr>
                   ))
                 ) : filteredOrders.map((order) => {
-                  const Config = statusConfig[order.status] || statusConfig.Pending;
-                  const StatusIcon = Config.icon;
                   return (
                     <motion.tr 
                       layout
@@ -214,20 +202,7 @@ export default function OrdersTable() {
                         <span className="text-sm font-display font-bold text-white">₹{Number(order.total).toLocaleString()}</span>
                       </td>
                       <td className="px-6 py-6">
-                        <div className="relative inline-block group/status">
-                          <select 
-                            value={order.status}
-                            onChange={(e) => updateStatus(order.id, e.target.value)}
-                            className={`appearance-none pl-3 pr-8 py-1.5 rounded-full text-[10px] font-bold border outline-none transition-all cursor-pointer hover:brightness-110 shadow-sm ${Config.color}`}
-                          >
-                            {statuses.slice(1).map(s => (
-                              <option key={s} value={s} className="bg-[#1A1A1A] text-white font-sans">{s}</option>
-                            ))}
-                          </select>
-                          <div className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-60 ${Config.color.split(' ')[0]}`}>
-                             <StatusIcon size={12} />
-                          </div>
-                        </div>
+                        <StatusPill status={order.status} />
                       </td>
                       <td className="px-6 py-6 text-right">
                         <Link 
