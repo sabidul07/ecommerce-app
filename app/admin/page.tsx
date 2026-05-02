@@ -9,7 +9,8 @@ import { RecentOrdersTable, TopProducts, LowStockAlerts, NewCustomersFeed } from
 
 export const revalidate = 0;
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: { days?: string } }) {
+  const daysRange = parseInt(searchParams.days || "14");
   const supabase = createServerSupabaseClient();
 
   const {
@@ -34,7 +35,8 @@ export default async function DashboardPage() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
   const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1).toISOString();
-  const fourteenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 14).toISOString();
+  const historyThreshold = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysRange).toISOString();
+  const comparisonThreshold = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (daysRange * 2)).toISOString();
 
   const [
     { data: allOrders },
@@ -57,24 +59,24 @@ export default async function DashboardPage() {
     supabase.from("orders").select("*, profiles(name)").order("created_at", { ascending: false }).limit(5),
     supabase.from("order_items").select("*, products(title, price)"),
     supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(5),
-    supabase.from("payments").select("*").gte("created_at", fourteenDaysAgo)
+    supabase.from("payments").select("*").gte("created_at", historyThreshold)
   ]);
 
   // KPI Calculations
   const totalRevenue = allOrders?.reduce((sum, o) => sum + Number(o.total), 0) ?? 0;
   const aov = allOrders?.length ? totalRevenue / allOrders.length : 0;
   
-  const orderDelta = yesterdayOrders?.length 
-    ? Math.round(((todayOrders?.length || 0) - yesterdayOrders.length) / yesterdayOrders.length * 100)
-    : 0;
+  const orderDelta = !yesterdayOrders?.length 
+    ? null 
+    : Math.round(((todayOrders?.length || 0) - yesterdayOrders.length) / yesterdayOrders.length * 100);
   
-  const customerDelta = newCustomersYesterday?.length
-    ? Math.round(((newCustomersToday?.length || 0) - newCustomersYesterday.length) / newCustomersYesterday.length * 100)
-    : 0;
+  const customerDelta = !newCustomersYesterday?.length
+    ? null
+    : Math.round(((newCustomersToday?.length || 0) - newCustomersYesterday.length) / newCustomersYesterday.length * 100);
 
   // Revenue Chart Logic
   const chartData = [];
-  for (let i = 13; i >= 0; i--) {
+  for (let i = daysRange - 1; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
     const dateStr = d.toISOString().split("T")[0];
@@ -138,14 +140,14 @@ export default async function DashboardPage() {
             title="Orders Today" 
             value={todayOrders?.length || 0} 
             delta={orderDelta} 
-            deltaType={orderDelta >= 0 ? "increase" : "decrease"} 
+            deltaType={orderDelta !== null && orderDelta >= 0 ? "increase" : "decrease"} 
             progress={45} 
           />
           <KPICard 
             title="New Customers" 
             value={newCustomersToday?.length || 0} 
             delta={customerDelta} 
-            deltaType={customerDelta >= 0 ? "increase" : "decrease"} 
+            deltaType={customerDelta !== null && customerDelta >= 0 ? "increase" : "decrease"} 
             progress={30} 
           />
           <KPICard 

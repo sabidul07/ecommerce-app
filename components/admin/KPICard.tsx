@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 interface KPICardProps {
   title: string;
   value: string | number;
-  delta?: number;
+  delta?: number | null;
   deltaType?: "increase" | "decrease";
   progress: number; // 0 to 100
   prefix?: string;
@@ -26,12 +26,16 @@ export default function KPICard({ title, value, delta, deltaType, progress, pref
             {prefix}{value}
           </h3>
         </div>
-        {delta !== undefined && (
+        {delta !== null && delta !== undefined ? (
           <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
             deltaType === "increase" ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
           }`}>
             {deltaType === "increase" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-            {delta}%
+            {Math.abs(delta)}%
+          </div>
+        ) : (
+          <div className="text-[10px] font-bold text-stone-500 px-2 py-1 bg-white/5 rounded-full border border-white/5">
+            — NO DATA
           </div>
         )}
       </div>

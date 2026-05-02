@@ -1,6 +1,10 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/signup/page": "app/signup/page.js",
+  "/api/razorpay/create-order/route": "app/api/razorpay/create-order/route.js",
+  "/api/razorpay/verify/route": "app/api/razorpay/verify/route.js",
+  "/(store)/cart/page": "app/(store)/cart/page.js",
   "/(store)/page": "app/(store)/page.js",
-  "/(store)/products/page": "app/(store)/products/page.js"
+  "/(store)/products/page": "app/(store)/products/page.js",
+  "/(store)/checkout/page": "app/(store)/checkout/page.js",
+  "/(store)/account/orders/[id]/page": "app/(store)/account/orders/[id]/page.js",
+  "/(store)/account/orders/page": "app/(store)/account/orders/page.js"
 }

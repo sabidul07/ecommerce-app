@@ -63,14 +63,16 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    // Check if user is admin
+    // Check if user is admin AND has the specific email
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')
       .eq('id', user.id)
       .single()
 
-    if (!profile?.is_admin) {
+    const isAuthorizedAdmin = profile?.is_admin && user.email === 'sabidulansari58@gmail.com';
+
+    if (!isAuthorizedAdmin) {
       return NextResponse.redirect(new URL('/', request.url))
     }
   }

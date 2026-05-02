@@ -188,7 +188,7 @@ export default function CheckoutPage() {
           Order ID: <span className="font-mono text-gold">{orderId}</span>
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <Link href="/dashboard" className="btn-primary min-w-[200px]">View Orders</Link>
+          <Link href="/account/orders" className="btn-primary min-w-[200px]">View Orders</Link>
           <Link href="/products" className="btn-secondary min-w-[200px]">Continue Shopping</Link>
         </div>
       </div>

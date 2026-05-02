@@ -58,27 +58,35 @@ export function RecentOrdersTable({ orders }: { orders: any[] }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {orders.map((order, i) => (
-              <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
-                      <User size={14} className="text-stone-400" />
+            {orders.length > 0 ? (
+              orders.map((order, i) => (
+                <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                        <User size={14} className="text-stone-400" />
+                      </div>
+                      <span className="text-sm text-stone-200 font-medium">{order.profiles?.name || "Guest"}</span>
                     </div>
-                    <span className="text-sm text-stone-200 font-medium">{order.profiles?.name || "Guest"}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-white font-medium">₹{order.total.toLocaleString()}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-[10px] font-bold border ${statusColors[order.status] || statusColors.Pending}`}>
-                    {order.status || "Pending"}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-[10px] text-stone-500">
-                  {new Date(order.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-white font-medium">₹{order.total.toLocaleString()}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 rounded-full text-[10px] font-bold border ${statusColors[order.status] || statusColors.Pending}`}>
+                      {order.status || "Pending"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-[10px] text-stone-500">
+                    {new Date(order.created_at).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="px-6 py-12 text-center text-xs text-stone-500 italic">
+                  No orders found in this period.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -104,6 +112,9 @@ export function TopProducts({ products }: { products: any[] }) {
             <p className="text-sm font-bold text-gold">₹{product.revenue.toLocaleString()}</p>
           </div>
         ))}
+        {products.length === 0 && (
+          <p className="text-xs text-stone-500 text-center py-4 italic">No sales data yet</p>
+        )}
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export default function LoginPage() {
     setError("");
 
     const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -28,20 +28,22 @@ export default function LoginPage() {
     if (authError) {
       setError(authError.message);
       setLoading(false);
-    } else {
-      // After login, check if admin and redirect
+      return;
+    }
+
+    if (authData?.user) {
+      // Check profile for admin status
       const { data: profile } = await supabase
         .from("profiles")
         .select("is_admin")
-        .eq("id", (await supabase.auth.getUser()).data.user?.id)
+        .eq("id", authData.user.id)
         .single();
 
       if (profile?.is_admin) {
-        router.push("/admin");
+        window.location.href = "/admin";
       } else {
-        router.push("/account/orders");
+        window.location.href = "/";
       }
-      router.refresh();
     }
   };
 
