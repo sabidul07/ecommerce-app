@@ -77,3 +77,12 @@ USING (
   EXISTS (SELECT 1 FROM public.profiles
   WHERE id = auth.uid() AND is_admin = true)
 );
+
+-- ============================================================
+-- ATELIER — PRODUCT PRICE VALIDATION
+-- ============================================================
+
+-- Ensure products cannot be sold for 0 or negative price
+ALTER TABLE public.products
+  ADD CONSTRAINT products_price_check 
+  CHECK (price > 0);

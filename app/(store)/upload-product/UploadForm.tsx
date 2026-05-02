@@ -154,11 +154,10 @@ export default function UploadForm() {
             onClick={() => !imagePreview && fileInputRef.current?.click()}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className={`relative border-2 border-dashed transition-colors ${
-              imagePreview
+            className={`relative border-2 border-dashed transition-colors ${imagePreview
                 ? "border-stone-light"
                 : "border-stone-light hover:border-stone cursor-pointer"
-            }`}
+              }`}
           >
             {imagePreview ? (
               <div className="relative aspect-video">

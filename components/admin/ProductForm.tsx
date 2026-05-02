@@ -40,9 +40,16 @@ export default function ProductForm({ initialData, isEditing = false }: ProductF
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    const parsedPrice = parseFloat(formData.price as string);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      alert("Price must be greater than 0 ₹. We only sell premium items.");
+      setLoading(false);
+      return;
+    }
+
     const payload = {
       ...formData,
-      price: parseFloat(formData.price as string),
+      price: parsedPrice,
       user_id: user.id,
     };
 
@@ -159,6 +166,8 @@ export default function ProductForm({ initialData, isEditing = false }: ProductF
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       placeholder="0.00"
+                      min="0.01"
+                      step="0.01"
                       className="bg-transparent border-none outline-none text-lg w-full text-white font-display font-bold"
                       required
                     />
