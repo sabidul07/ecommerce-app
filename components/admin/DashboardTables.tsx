@@ -60,7 +60,7 @@ export function RecentOrdersTable({ orders }: { orders: any[] }) {
           <tbody className="divide-y divide-white/5">
             {orders.length > 0 ? (
               orders.map((order, i) => (
-                <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
+                <tr key={order.id} className="hover:bg-white/2 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
@@ -172,7 +172,7 @@ export function NewCustomersFeed({ customers }: { customers: any[] }) {
       <div className="space-y-6">
         {customers.map((customer) => (
           <div key={customer.id} className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
               <User size={14} className="text-gold" />
             </div>
             <div>

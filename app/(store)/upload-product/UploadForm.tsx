@@ -86,8 +86,8 @@ export default function UploadForm() {
     }
 
     const parsedPrice = parseFloat(price);
-    if (isNaN(parsedPrice) || parsedPrice <= 0) {
-      setError("Please enter a valid price.");
+    if (isNaN(parsedPrice) || parsedPrice < 29) {
+      setError("Price must be at least 29 ₹ for premium listings.");
       setLoading(false);
       return;
     }
@@ -243,7 +243,7 @@ export default function UploadForm() {
               onChange={(e) => setPrice(e.target.value)}
               className="input-field pl-5"
               placeholder="0.00"
-              min="0.01"
+              min="29"
               step="0.01"
               required
             />

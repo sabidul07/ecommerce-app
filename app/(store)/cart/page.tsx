@@ -44,7 +44,7 @@ export default function CartPage() {
           {items.map(({ product, quantity }) => (
             <div key={product.id} className="card flex gap-4">
               {/* Image */}
-              <div className="w-20 h-20 bg-stone-light flex-shrink-0 relative overflow-hidden">
+              <div className="w-20 h-20 bg-stone-light shrink-0 relative overflow-hidden">
                 {product.image ? (
                   <Image
                     src={product.image}
@@ -66,7 +66,7 @@ export default function CartPage() {
                   <h3 className="font-display text-lg leading-tight">{product.title}</h3>
                   <button
                     onClick={() => removeFromCart(product.id)}
-                    className="text-stone hover:text-rust transition-colors flex-shrink-0 mt-0.5"
+                    className="text-stone hover:text-rust transition-colors shrink-0 mt-0.5"
                   >
                     <X size={16} />
                   </button>
@@ -117,7 +117,7 @@ export default function CartPage() {
                   <span className="text-stone truncate mr-2">
                     {product.title} x {quantity}
                   </span>
-                  <span className="flex-shrink-0">
+                  <span className="shrink-0">
                     ₹{(product.price * quantity).toFixed(2)}
                   </span>
                 </div>

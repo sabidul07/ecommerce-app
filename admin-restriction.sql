@@ -86,3 +86,15 @@ USING (
 ALTER TABLE public.products
   ADD CONSTRAINT products_price_check 
   CHECK (price > 0);
+
+-- ============================================================
+-- ATELIER — PRICE FLOOR UPDATE (29 INR)
+-- ============================================================
+
+-- Update price check to 29 INR
+ALTER TABLE public.products
+  DROP CONSTRAINT IF EXISTS products_price_check;
+
+ALTER TABLE public.products
+  ADD CONSTRAINT products_price_check 
+  CHECK (price >= 29);

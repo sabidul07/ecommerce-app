@@ -160,7 +160,7 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
             {items.map(({ icon: Icon, text, sub }, index) => (
               <div
                 key={`${text}-${index}`}
-                className="flex items-center gap-4 flex-shrink-0"
+                className="flex items-center gap-4 shrink-0"
               >
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
                   <Icon size={20} className="text-gold" />

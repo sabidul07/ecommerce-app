@@ -104,7 +104,7 @@ export default function OrdersTable() {
           <input 
             type="text" 
             placeholder="Search by ID, name or email..." 
-            className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-stone-600"
+            className="bg-transparent border-none outline-hidden text-sm w-full text-white placeholder:text-stone-600"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -114,7 +114,7 @@ export default function OrdersTable() {
           <select 
             value={dateRange} 
             onChange={(e) => setDateRange(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-stone-300 outline-none hover:border-gold transition-colors"
+            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-stone-300 outline-hidden hover:border-gold transition-colors"
           >
             <option value="all" className="bg-[#1A1A1A]">All Time</option>
             <option value="today" className="bg-[#1A1A1A]">Today</option>
@@ -153,7 +153,7 @@ export default function OrdersTable() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="text-stone-500 text-[10px] uppercase tracking-[0.2em] bg-white/[0.02]">
+              <tr className="text-stone-500 text-[10px] uppercase tracking-[0.2em] bg-white/2">
                 <th className="px-6 py-5 font-bold">Order Details</th>
                 <th className="px-6 py-5 font-bold">Customer</th>
                 <th className="px-6 py-5 font-bold text-right">Items</th>
@@ -167,7 +167,7 @@ export default function OrdersTable() {
                 {loading ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      <td colSpan={6} className="px-6 py-8 h-16 bg-white/[0.01]"></td>
+                      <td colSpan={6} className="px-6 py-8 h-16 bg-white/1"></td>
                     </tr>
                   ))
                 ) : filteredOrders.map((order) => {
@@ -178,7 +178,7 @@ export default function OrdersTable() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       key={order.id} 
-                      className="hover:bg-white/[0.02] transition-colors group"
+                      className="hover:bg-white/2 transition-colors group"
                     >
                       <td className="px-6 py-6">
                         <div className="flex flex-col">

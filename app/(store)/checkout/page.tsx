@@ -351,7 +351,7 @@ export default function CheckoutPage() {
 
                 <div className="flex gap-4">
                   <button onClick={() => setStep(1)} className="btn-secondary flex-1 py-4">Back</button>
-                  <button onClick={() => setStep(3)} className="btn-primary flex-[2] py-4">Continue to Payment</button>
+                  <button onClick={() => setStep(3)} className="btn-primary flex-2 py-4">Continue to Payment</button>
                 </div>
               </motion.div>
             )}
@@ -369,7 +369,7 @@ export default function CheckoutPage() {
                   <p className="text-stone text-sm">Review your details and pay securely.</p>
                 </div>
 
-                <div className="bg-parchment border border-stone-light p-6 space-y-4 rounded-xl shadow-sm">
+                <div className="bg-parchment border border-stone-light p-6 space-y-4 rounded-xl shadow-xs">
                   <div className="flex justify-between items-start">
                     <div className="flex items-start gap-3">
                       <MapPin size={18} className="text-gold mt-1" />
@@ -420,13 +420,13 @@ export default function CheckoutPage() {
 
         {/* Right Column: Order Summary */}
         <div className="lg:col-span-5">
-          <div className="card sticky top-24 border-stone-light shadow-sm">
+          <div className="card sticky top-24 border-stone-light shadow-xs">
             <h3 className="font-display text-2xl mb-8 pb-4 border-b border-stone-light">Order Summary</h3>
             
             <div className="space-y-6 mb-10 max-h-[300px] overflow-y-auto pr-2 no-scrollbar">
               {items.map(({ product, quantity }) => (
                 <div key={product.id} className="flex gap-4">
-                  <div className="w-16 h-16 bg-stone-light relative flex-shrink-0">
+                  <div className="w-16 h-16 bg-stone-light relative shrink-0">
                     {product.image ? (
                       <Image src={product.image} alt={product.title} fill className="object-cover" />
                     ) : (

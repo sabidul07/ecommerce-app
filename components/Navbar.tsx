@@ -85,7 +85,7 @@ export default function Navbar() {
     <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-parchment/80 backdrop-blur-md border-b border-stone-light shadow-sm"
+          ? "bg-parchment/80 backdrop-blur-md border-b border-stone-light shadow-xs"
           : "bg-parchment border-b border-transparent"
       }`}
     >
@@ -134,7 +134,7 @@ export default function Navbar() {
               type="search"
               name="q"
               placeholder="Search products..."
-              className="pl-9 pr-4 py-1.5 text-sm bg-transparent border border-stone-300 rounded-full focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all w-48 xl:w-64 placeholder:text-stone-400"
+              className="pl-9 pr-4 py-1.5 text-sm bg-transparent border border-stone-300 rounded-full focus:outline-hidden focus:border-gold focus:ring-1 focus:ring-gold transition-all w-48 xl:w-64 placeholder:text-stone-400"
             />
             <Search size={14} className="absolute left-3 text-stone-400" />
           </form>

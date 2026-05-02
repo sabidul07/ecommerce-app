@@ -74,7 +74,7 @@ export default function AdminProductsPage() {
           <input 
             type="text" 
             placeholder="Search products by title..." 
-            className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-stone-600"
+            className="bg-transparent border-none outline-hidden text-sm w-full text-white placeholder:text-stone-600"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -103,7 +103,7 @@ export default function AdminProductsPage() {
               key={product.id}
               className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-gold/30 transition-all shadow-xl"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-black">
+              <div className="relative aspect-4/3 overflow-hidden bg-black">
                 {product.image ? (
                   <img 
                     src={product.image} 

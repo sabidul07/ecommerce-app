@@ -59,7 +59,7 @@ export default function DangerZone({ email }: Props) {
 
       {/* Confirmation modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 backdrop-blur-sm px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 backdrop-blur-xs px-4">
           <div className="bg-white max-w-md w-full p-6 shadow-2xl">
             <h2 className="font-display text-xl font-light text-ink mb-2">Are you absolutely sure?</h2>
             <p className="text-sm text-stone mb-5">

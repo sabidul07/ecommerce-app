@@ -98,7 +98,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <div className="text-center py-24 bg-parchment border border-stone-light border-dashed rounded-xl flex flex-col items-center justify-center space-y-2 px-4">
-            <div className="w-16 h-16 bg-white border border-stone-light rounded-full flex items-center justify-center mb-4 shadow-sm">
+            <div className="w-16 h-16 bg-white border border-stone-light rounded-full flex items-center justify-center mb-4 shadow-xs">
               <Package size={24} className="text-stone-400" />
             </div>
             <h3 className="font-display text-2xl font-light text-ink">No featured products</h3>
@@ -106,7 +106,7 @@ export default async function HomePage() {
               Our curators are currently selecting the finest pieces to showcase here. Check back soon!
             </p>
             {isAdmin && (
-              <Link href="/upload-product" className="mt-6 btn-gold inline-flex items-center gap-2 text-sm py-2 px-4 shadow-sm hover:shadow-md">
+              <Link href="/upload-product" className="mt-6 btn-gold inline-flex items-center gap-2 text-sm py-2 px-4 shadow-xs hover:shadow-md">
                 Add some in the admin panel <ArrowRight size={14} />
               </Link>
             )}
@@ -176,7 +176,7 @@ export default async function HomePage() {
             <Link
               key={cat.name}
               href="/products"
-              className="group cursor-pointer block relative rounded-sm overflow-hidden aspect-[4/5] transition-transform duration-300 hover:scale-[1.03]"
+              className="group cursor-pointer block relative rounded-xs overflow-hidden aspect-4/5 transition-transform duration-300 hover:scale-[1.03]"
             >
               <Image
                 src={cat.image}
@@ -186,7 +186,7 @@ export default async function HomePage() {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 50vw, 20vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent transition-opacity group-hover:opacity-100 opacity-80" />
+              <div className="absolute inset-0 bg-linear-to-t from-ink/90 via-ink/20 to-transparent transition-opacity group-hover:opacity-100 opacity-80" />
               <div className="absolute bottom-0 left-0 w-full p-4">
                 <p className="font-display text-xl text-white mb-1">{cat.name}</p>
                 <p className="text-white/70 text-xs tracking-wider uppercase font-semibold">{cat.count} products</p>
@@ -225,14 +225,14 @@ export default async function HomePage() {
                         key={item}
                         className="text-parchment text-sm flex items-center gap-2 font-medium"
                       >
-                        <span className="text-gold flex-shrink-0"><ShieldCheck size={16} /></span> {item}
+                        <span className="text-gold shrink-0"><ShieldCheck size={16} /></span> {item}
                       </p>
                     ),
                   )}
                 </div>
               )}
             </div>
-            <div className="flex-shrink-0 max-sm:w-full">
+            <div className="shrink-0 max-sm:w-full">
               {isAdmin ? (
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link

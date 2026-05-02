@@ -68,7 +68,7 @@ export default async function OrdersPage() {
               <Link 
                 key={order.id} 
                 href={`/account/orders/${order.id}`}
-                className="block bg-white border border-stone-light rounded-2xl p-6 hover:border-gold transition-all group shadow-sm hover:shadow-md"
+                className="block bg-white border border-stone-light rounded-2xl p-6 hover:border-gold transition-all group shadow-xs hover:shadow-md"
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="space-y-4">

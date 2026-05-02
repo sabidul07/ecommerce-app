@@ -48,7 +48,7 @@ export default async function CustomersPage() {
             <input 
               type="text" 
               placeholder="Search customers..." 
-              className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-stone-600"
+              className="bg-transparent border-none outline-hidden text-sm w-full text-white placeholder:text-stone-600"
             />
           </div>
         </div>
@@ -84,7 +84,7 @@ export default async function CustomersPage() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {customers?.map((customer) => (
-                  <tr key={customer.id} className="hover:bg-white/[0.02] transition-colors group">
+                  <tr key={customer.id} className="hover:bg-white/2 transition-colors group">
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold font-bold text-xs border border-gold/20">

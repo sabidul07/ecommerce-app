@@ -87,14 +87,14 @@ export default async function OrderDetailPage({ params }: { params: { id: string
       <div className="grid lg:grid-cols-3 gap-10">
         {/* Main Content: Items */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white border border-stone-light rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-white border border-stone-light rounded-2xl overflow-hidden shadow-xs">
             <div className="p-6 border-b border-stone-light bg-parchment/10">
               <h2 className="font-display text-xl text-ink">Order Items</h2>
             </div>
             <div className="divide-y divide-stone-light">
               {order.order_items.map((item: any) => (
                 <div key={item.id} className="p-6 flex gap-6 group">
-                  <div className="w-20 h-24 bg-parchment rounded-xl overflow-hidden flex-shrink-0 border border-stone-light">
+                  <div className="w-20 h-24 bg-parchment rounded-xl overflow-hidden shrink-0 border border-stone-light">
                     {item.products?.image ? (
                       <img src={item.products.image} alt={item.products.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     ) : (
@@ -117,11 +117,11 @@ export default async function OrderDetailPage({ params }: { params: { id: string
           </div>
 
           {/* Timeline / Status */}
-          <div className="bg-white border border-stone-light rounded-2xl p-8 shadow-sm">
+          <div className="bg-white border border-stone-light rounded-2xl p-8 shadow-xs">
             <h2 className="font-display text-xl text-ink mb-8">Order Timeline</h2>
-            <div className="space-y-8 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-[1px] before:bg-stone-light">
+            <div className="space-y-8 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-stone-light">
               <div className="flex gap-6 relative z-10">
-                <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center border-4 border-white shadow-sm">
+                <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center border-4 border-white shadow-xs">
                   <CheckCircle2 size={10} className="text-white" />
                 </div>
                 <div>
@@ -132,7 +132,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
               </div>
               
               <div className="flex gap-6 relative z-10">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-sm ${order.status !== 'Pending' ? 'bg-emerald-500' : 'bg-stone-light'}`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center border-4 border-white shadow-xs ${order.status !== 'Pending' ? 'bg-emerald-500' : 'bg-stone-light'}`}>
                   {order.status !== 'Pending' ? <CheckCircle2 size={10} className="text-white" /> : <div className="w-1 h-1 bg-white rounded-full" />}
                 </div>
                 <div>
@@ -142,7 +142,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
               </div>
 
               <div className="flex gap-6 relative z-10 opacity-50">
-                <div className="w-6 h-6 rounded-full bg-stone-light flex items-center justify-center border-4 border-white shadow-sm">
+                <div className="w-6 h-6 rounded-full bg-stone-light flex items-center justify-center border-4 border-white shadow-xs">
                   <Truck size={10} className="text-white" />
                 </div>
                 <div>
@@ -156,7 +156,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
 
         {/* Sidebar: Totals & Info */}
         <div className="space-y-8">
-          <div className="bg-white border border-stone-light rounded-2xl p-8 shadow-sm">
+          <div className="bg-white border border-stone-light rounded-2xl p-8 shadow-xs">
             <h2 className="font-display text-xl text-ink mb-6">Order Summary</h2>
             <div className="space-y-4">
               <div className="flex justify-between text-sm">
@@ -183,7 +183,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             </div>
           </div>
 
-          <div className="bg-white border border-stone-light rounded-2xl p-8 shadow-sm space-y-8">
+          <div className="bg-white border border-stone-light rounded-2xl p-8 shadow-xs space-y-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <MapPin size={18} className="text-gold" />

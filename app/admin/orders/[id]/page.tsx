@@ -87,7 +87,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
         <div className="lg:col-span-2 space-y-10">
           {/* Order Items */}
           <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-            <div className="p-6 border-b border-white/10 bg-white/[0.02]">
+            <div className="p-6 border-b border-white/10 bg-white/2">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <Package size={20} className="text-gold" />
                 Order Items ({order.order_items.length})
@@ -95,8 +95,8 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             </div>
             <div className="divide-y divide-white/5">
               {order.order_items.map((item: any) => (
-                <div key={item.id} className="p-6 flex gap-6 group hover:bg-white/[0.01] transition-colors">
-                  <div className="w-20 h-24 bg-white/5 rounded-xl overflow-hidden flex-shrink-0 border border-white/10">
+                <div key={item.id} className="p-6 flex gap-6 group hover:bg-white/1 transition-colors">
+                  <div className="w-20 h-24 bg-white/5 rounded-xl overflow-hidden shrink-0 border border-white/10">
                     {item.products?.image ? (
                       <img src={item.products.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     ) : (
@@ -115,7 +115,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 </div>
               ))}
             </div>
-            <div className="p-6 bg-white/[0.02] border-t border-white/10">
+            <div className="p-6 bg-white/2 border-t border-white/10">
                <div className="flex flex-col gap-3 max-w-xs ml-auto">
                   <div className="flex justify-between text-sm text-stone-400">
                     <span>Subtotal</span>
@@ -151,7 +151,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                    <div>
                       <p className="text-sm font-bold text-white">Order Placed & Paid</p>
                       <p className="text-xs text-stone-500 mt-1">{new Date(order.created_at).toLocaleString()}</p>
-                      <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mt-2 px-2 py-1 bg-emerald-500/10 rounded inline-block border border-emerald-500/20">Success</p>
+                      <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mt-2 px-2 py-1 bg-emerald-500/10 rounded-sm inline-block border border-emerald-500/20">Success</p>
                    </div>
                 </div>
 
@@ -208,7 +208,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             <div className="pt-8 border-t border-white/10">
               <h3 className="text-[10px] font-bold text-gold uppercase tracking-[0.3em] mb-6">Shipping Address</h3>
               <div className="flex gap-3">
-                 <MapPin size={18} className="text-gold flex-shrink-0" />
+                 <MapPin size={18} className="text-gold shrink-0" />
                  <p className="text-sm text-stone-400 leading-relaxed">
                    Plot No. 42, Silicon Valley, <br />
                    Hitech City, Hyderabad, <br />

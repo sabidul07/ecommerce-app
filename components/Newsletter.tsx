@@ -66,7 +66,7 @@ export default function Newsletter() {
             }}
             placeholder="Your email address"
             required
-            className="flex-1 border border-stone-light bg-white px-4 py-3 text-sm focus:outline-none focus:border-gold transition-colors"
+            className="flex-1 border border-stone-light bg-white px-4 py-3 text-sm focus:outline-hidden focus:border-gold transition-colors"
             disabled={status === "loading" || status === "success"}
           />
           <button

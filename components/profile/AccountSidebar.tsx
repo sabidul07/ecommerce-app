@@ -32,7 +32,7 @@ export default function AccountSidebar() {
   };
 
   return (
-    <div className="w-full lg:w-64 flex-shrink-0">
+    <div className="w-full lg:w-64 shrink-0">
       <div className="bg-white border border-stone-light rounded-2xl overflow-hidden sticky top-[100px]">
         <div className="p-6 border-b border-stone-light bg-parchment/30">
           <p className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mb-1 text-center">Account Menu</p>

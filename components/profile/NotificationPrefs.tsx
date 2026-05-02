@@ -59,12 +59,12 @@ export default function NotificationPrefs({ userId, initialPrefs }: Props) {
             role="switch"
             aria-checked={prefs[key]}
             onClick={() => handleToggle(key)}
-            className={`relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
+            className={`relative shrink-0 w-11 h-6 rounded-full transition-colors duration-200 focus:outline-hidden ${
               prefs[key] ? "bg-gold" : "bg-stone-300"
             }`}
           >
             <span
-              className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-200 ${
+              className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-xs transform transition-transform duration-200 ${
                 prefs[key] ? "translate-x-5" : "translate-x-0"
               }`}
             />

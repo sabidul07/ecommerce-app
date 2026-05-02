@@ -1,126 +1,198 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --font-display: "Cormorant Garamond", serif;
-  --font-body: "DM Sans", sans-serif;
+@theme {
+  --font-sans: var(--font-body), sans-serif;
+  --font-display: var(--font-display), sans-serif;
+
+  --color-ink: #0a0a0b;
+  --color-parchment: #f5f0e8;
+  --color-gold: #c9a84c;
+  --color-gold-light: #e8c97a;
+  --color-rust: #c4572a;
+  --color-sage: #6b8f71;
+  --color-stone: #8c8279;
+  --color-stone-light: #d4cfc8;
+  --color-stone-dark: #3d3830;
+
+  --animate-fade-up: fadeUp 0.6s ease forwards;
+  --animate-fade-in: fadeIn 0.4s ease forwards;
+  --animate-shimmer: shimmer 1.5s infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out 3s infinite;
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
 }
 
-* {
-  box-sizing: border-box;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-html {
-  scroll-behavior: smooth;
+@utility btn-primary {
+  @apply bg-ink text-parchment px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-stone-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
-body {
-  background-color: #f5f0e8;
-  color: #0a0a0b;
+@utility btn-secondary {
+  @apply border border-ink text-ink px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-ink hover:text-parchment active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+@utility btn-gold {
+  @apply bg-gold text-ink px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-gold-light active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+@utility font-body {
   font-family: var(--font-body);
-  min-height: 100vh;
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-ink text-parchment px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-stone-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
+@utility input-field {
+  @apply w-full bg-transparent border-b border-stone focus:border-ink outline-hidden py-3 text-ink placeholder:text-stone transition-colors duration-200 font-body text-sm;
+}
 
-  .btn-secondary {
-    @apply border border-ink text-ink px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-ink hover:text-parchment active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
+@utility card {
+  @apply bg-white border border-stone-light p-6 transition-all duration-300;
+}
 
-  .btn-gold {
-    @apply bg-gold text-ink px-6 py-3 font-medium tracking-wide transition-all duration-200 hover:bg-gold-light active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
+@utility card-hover {
+  @apply card hover:border-stone hover:shadow-md;
+}
 
-  .font-body {
-    font-family: var(--font-body);
-  }
+@utility admin-card {
+  @apply bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-300;
+}
 
-  .input-field {
-    @apply w-full bg-transparent border-b border-stone focus:border-ink outline-none py-3 text-ink placeholder:text-stone transition-colors duration-200 font-body text-sm;
-  }
+@utility glass-panel {
+  @apply bg-white/2 backdrop-blur-xl border border-white/10 rounded-3xl;
+}
 
-  .card {
-    @apply bg-white border border-stone-light p-6 transition-all duration-300;
-  }
+@utility btn-boutique {
+  @apply border border-parchment/30 text-parchment px-6 py-3 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all flex items-center gap-2;
+}
 
-  .card-hover {
-    @apply card hover:border-stone hover:shadow-md;
-  }
+@utility status-badge {
+  @apply px-3 py-1 rounded-full text-[10px] font-bold border shadow-xs flex items-center gap-1.5;
+}
 
-  .admin-card {
-    @apply bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-300;
-  }
+@utility section-title {
+  @apply font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink leading-tight;
+}
 
-  .glass-panel {
-    @apply bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl;
-  }
+@utility page-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 py-12;
+}
 
-  .btn-boutique {
-    @apply border border-parchment/30 text-parchment px-6 py-3 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all flex items-center gap-2;
-  }
+@utility shimmer-bg {
+  background: linear-gradient(90deg, #e8e2d9 25%, #f0ebe2 50%, #e8e2d9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
 
-  .status-badge {
-    @apply px-3 py-1 rounded-full text-[10px] font-bold border shadow-sm flex items-center gap-1.5;
-  }
+@utility text-balance {
+  text-wrap: balance;
+}
 
-  .section-title {
-    @apply font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink leading-tight;
-  }
+@utility animate-fade-up {
+  animation: fadeUp 0.6s ease forwards;
+  opacity: 0;
+}
 
-  .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 py-12;
-  }
+@utility animate-delay-100 {
+  animation-delay: 100ms;
+}
 
-  .shimmer-bg {
-    background: linear-gradient(90deg, #e8e2d9 25%, #f0ebe2 50%, #e8e2d9 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+@utility animate-delay-200 {
+  animation-delay: 200ms;
+}
+
+@utility animate-delay-300 {
+  animation-delay: 300ms;
+}
+
+@utility animate-delay-400 {
+  animation-delay: 400ms;
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
   }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility mask-edges-right {
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  :root {
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'DM Sans', sans-serif;
   }
 
-  .animate-fade-up {
-    animation: fadeUp 0.6s ease forwards;
-    opacity: 0;
+  * {
+    box-sizing: border-box;
   }
 
-  .animate-delay-100 {
-    animation-delay: 100ms;
+  html {
+    scroll-behavior: smooth;
   }
 
-  .animate-delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .animate-delay-300 {
-    animation-delay: 300ms;
-  }
-
-  .animate-delay-400 {
-    animation-delay: 400ms;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .mask-edges-right {
-    mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  body {
+    background-color: #f5f0e8;
+    color: #0a0a0b;
+    font-family: var(--font-body);
+    min-height: 100vh;
   }
 }
