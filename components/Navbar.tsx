@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ShoppingBag, User, LogOut, Package, UploadCloud, Search, Truck, MapPin, Heart, LayoutDashboard } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { createClient } from "@/lib/supabase";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, startTransition } from "react";
 import { signOut } from "@/app/actions/auth";
 
@@ -18,6 +19,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [navSuggestions, setNavSuggestions] = useState<any[]>([]);
+  const [showNavSuggestions, setShowNavSuggestions] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,11 +86,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-parchment/80 backdrop-blur-md border-b border-stone-light shadow-xs"
-          : "bg-parchment border-b border-transparent"
-      }`}
+      className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
+        ? "bg-parchment/80 backdrop-blur-md border-b border-stone-light shadow-xs"
+        : "bg-parchment border-b border-transparent"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
@@ -97,7 +99,6 @@ export default function Navbar() {
         >
           ATELIER
         </Link>
-
         {/* Nav Links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
@@ -107,11 +108,10 @@ export default function Navbar() {
               <Link
                 key={link.href + link.label}
                 href={link.href}
-                className={`text-sm tracking-wide transition-colors ${
-                  pathname === link.href
-                    ? "text-ink font-medium"
-                    : "text-stone hover:text-ink"
-                }`}
+                className={`text-sm tracking-wide transition-colors ${pathname === link.href
+                  ? "text-ink font-medium"
+                  : "text-stone hover:text-ink"
+                  }`}
               >
                 {link.label}
               </Link>
@@ -122,23 +122,63 @@ export default function Navbar() {
         {/* Right Actions */}
         <div className="flex items-center gap-5">
           {/* Search */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const q = (e.currentTarget.elements.namedItem("q") as HTMLInputElement).value;
-              if (q) router.push(`/products?q=${encodeURIComponent(q)}`);
-            }}
-            className="hidden lg:flex items-center relative mr-2"
-          >
-            <input
-              type="search"
-              name="q"
-              placeholder="Search products..."
-              className="pl-9 pr-4 py-1.5 text-sm bg-transparent border border-stone-300 rounded-full focus:outline-hidden focus:border-gold focus:ring-1 focus:ring-gold transition-all w-48 xl:w-64 placeholder:text-stone-400"
-            />
-            <Search size={14} className="absolute left-3 text-stone-400" />
-          </form>
+          <div className="hidden lg:flex items-center relative mr-2 group">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const q = (e.currentTarget.elements.namedItem("q") as HTMLInputElement).value;
+                if (q) router.push(`/products?q=${encodeURIComponent(q)}`);
+              }}
+              className="flex items-center relative"
+            >
+              <input
+                type="search"
+                name="q"
+                autoComplete="off"
+                placeholder="Search products..."
+                onChange={(e) => {
+                  const query = e.target.value;
+                  if (query.length > 1) {
+                    const supabase = createClient();
+                    supabase.from("products")
+                      .select("id, title, price")
+                      .ilike("title", `%${query}%`)
+                      .limit(5)
+                      .then(({ data }) => setNavSuggestions((data as any) || []));
+                  } else {
+                    setNavSuggestions([]);
+                  }
+                }}
+                onFocus={() => setShowNavSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowNavSuggestions(false), 200)}
+                className="pl-9 pr-4 py-1.5 text-sm bg-transparent border border-stone-light rounded-full focus:outline-hidden focus:border-gold focus:ring-1 focus:ring-gold transition-all w-48 xl:w-64 placeholder:text-stone-400"
+              />
+              <Search size={14} className="absolute left-3 text-stone-400" />
+            </form>
 
+            {/* Live Nav Suggestions */}
+            <AnimatePresence>
+              {showNavSuggestions && navSuggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-full left-0 right-0 mt-3 bg-white border border-stone-light shadow-2xl rounded-lg overflow-hidden z-50"
+                >
+                  {navSuggestions.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => router.push(`/products?q=${encodeURIComponent(s.title)}`)}
+                      className="w-full text-left px-4 py-3 hover:bg-parchment flex items-center justify-between transition-colors border-b border-stone-light last:border-0"
+                    >
+                      <span className="text-xs font-medium text-ink truncate mr-4">{s.title}</span>
+                      <span className="text-[10px] font-bold text-gold shrink-0">₹{s.price}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           {/* Cart */}
           <Link
             href="/cart"
@@ -157,7 +197,7 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center justify-center w-10 h-10 hover:text-gold transition-colors text-stone hover:text-ink"
+                className="flex items-center justify-center w-10 h-10 hover:text-gold transition-colors text-stone"
                 aria-label="Account menu"
               >
                 <User size={20} />
@@ -168,7 +208,7 @@ export default function Navbar() {
                     <p className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mb-1">Signed in as</p>
                     <p className="text-xs font-semibold text-ink truncate">{user.email}</p>
                   </div>
-                  
+
                   <div className="py-2">
                     <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <User size={16} /> My profile
@@ -182,9 +222,7 @@ export default function Navbar() {
                     <Link href="/products" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <Heart size={16} /> Wishlist
                     </Link>
-                    <Link href="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors border-t border-stone-light mt-2 pt-4">
-                      <LayoutDashboard size={16} /> Admin Panel
-                    </Link>
+
                   </div>
 
                   <div className="border-t border-stone-light mt-2">
@@ -209,7 +247,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center justify-center w-10 h-10 hover:text-gold transition-colors text-stone hover:text-ink"
+              className="flex items-center justify-center w-10 h-10 hover:text-gold transition-colors text-stone "
               aria-label="Sign in"
             >
               <User size={20} />

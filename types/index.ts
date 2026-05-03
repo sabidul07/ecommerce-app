@@ -11,6 +11,9 @@ export interface Product {
   image: string | null;
   user_id: string;
   created_at: string;
+  category?: string;
+  rating?: number;
+  inventory_count?: number;
   profiles?: { name: string };
 }
 

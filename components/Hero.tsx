@@ -39,6 +39,13 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           <motion.p variants={fadeInUp} className="text-gold tracking-[0.3em] text-xs mb-6 font-semibold">
             CURATED MARKETPLACE
           </motion.p>
+          <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 bg-gold/10 border border-gold/20 rounded-full px-4 py-1.5 mb-8">
+            <span className="flex h-2 w-2 rounded-full bg-gold animate-pulse" />
+            <p className="text-[10px] text-gold-light font-bold uppercase tracking-[0.2em]">
+              Flash Sale: Artisan Vases from ₹499
+            </p>
+          </motion.div>
+
           <motion.h1 variants={fadeInUp} className="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] mb-6">
             Discover
             <em className="italic text-gold-light"> Exceptional</em>
@@ -48,29 +55,35 @@ export default function Hero({ isAdmin }: { isAdmin: boolean }) {
           <motion.p variants={fadeInUp} className="text-stone-300 max-w-md text-base leading-relaxed mb-10">
             A premium marketplace connecting artisans and collectors. Every piece tells a story.
           </motion.p>
-          <motion.div variants={fadeInUp} className="flex gap-4 flex-wrap">
+          
+          <motion.div variants={fadeInUp} className="flex items-center gap-8 flex-wrap mb-4">
             <Link
               href="/products"
-              className="btn-gold inline-flex items-center justify-center gap-2 px-4 lg:p-4 xl:px-6 py-4 text-sm max-sm:flex-1"
+              className="btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-bold shadow-xl shadow-gold/10"
             >
               Browse Collection <ArrowRight size={16} />
             </Link>
+            
             {isAdmin ? (
               <Link
                 href="/upload-product"
-                className="border border-parchment/30 text-parchment px-4 lg:p-6 xl:px-8 py-4 text-sm font-medium tracking-wide hover:bg-parchment/10 transition-all inline-flex items-center gap-2"
+                className="text-stone-400 hover:text-white transition-colors text-sm font-medium border-b border-stone-500/30 pb-0.5"
               >
                 Add Product
               </Link>
             ) : (
               <Link
                 href="/signup"
-                className="btn-boutique"
+                className="text-stone-400 hover:text-white transition-colors text-sm font-medium border-b border-stone-500/30 pb-0.5"
               >
                 Start Selling
               </Link>
             )}
           </motion.div>
+
+          <motion.p variants={fadeInUp} className="text-[10px] text-stone-500 uppercase tracking-[0.2em] font-medium flex items-center gap-3">
+            Free delivery across India <span className="h-1 w-1 bg-stone-700 rounded-full" /> Easy returns
+          </motion.p>
         </motion.div>
 
         {/* Right Decorative Image Mosaic */}

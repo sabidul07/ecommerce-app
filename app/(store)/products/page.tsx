@@ -3,6 +3,7 @@ import ProductCard from "@/components/ProductCard";
 import { Product } from "@/types";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import ProductCatalog from "@/components/ProductCatalog";
 
 export const revalidate = 0;
 
@@ -42,35 +43,19 @@ export default async function ProductsPage() {
   return (
     <div className="page-container">
       {/* Header */}
-      <div className="flex items-end justify-between mb-12 border-b border-stone-light pb-8">
+      <div className="flex items-end justify-between mb-16 border-b border-stone-light pb-8">
         <div>
           <p className="text-gold tracking-[0.3em] text-xs mb-2">
             OUR COLLECTION
           </p>
           <h1 className="section-title">All Products</h1>
         </div>
-        <p className="text-stone text-sm">{products?.length ?? 0} items</p>
+        <p className="text-stone text-[10px] font-bold uppercase tracking-widest">
+          Curated Excellence
+        </p>
       </div>
 
-      {/* Grid */}
-      {!products || products.length === 0 ? (
-        <div className="text-center py-24">
-          <ShoppingBag size={48} className="text-stone-light mx-auto mb-4" />
-          <h3 className="font-display text-2xl mb-2">No products yet</h3>
-          <p className="text-stone text-sm mb-6">
-            Be the first to list something extraordinary.
-          </p>
-          <Link href="/upload-product" className="btn-primary inline-block">
-            List a Product
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {(products as Product[]).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
+      <ProductCatalog initialProducts={products as Product[]} />
     </div>
   );
 }
