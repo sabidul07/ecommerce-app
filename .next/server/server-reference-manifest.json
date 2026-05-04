@@ -2,17 +2,21 @@
   "node": {
     "54411b03d2c2c5169e54f2274665990e4e5cf3da": {
       "workers": {
-        "app/(store)/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/(store)/cart/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!",
-        "app/(store)/products/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
+        "app/(store)/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Fauth.ts%22%2C%5B%22signOut%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/(store)/page": "action-browser",
-        "app/(store)/cart/page": "action-browser",
-        "app/(store)/products/page": "action-browser"
+        "app/(store)/page": "action-browser"
+      }
+    },
+    "f806fc52a6c0990a7bcb34863f617e55147d7925": {
+      "workers": {
+        "app/admin/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fmuskankhan%2FProjects%2Fecommerce-app%2Fapp%2Factions%2Finventory.ts%22%2C%5B%22restockProduct%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/admin/page": "action-browser"
       }
     }
   },
   "edge": {},
-  "encryptionKey": "yluuwvpyo3UM8bUi2YJ/5NI6j4rerWzHTvBACwXJKCc="
+  "encryptionKey": "KE3hFLutR3qCohqagadTpXwffjEeqm6N7Eirj4ZiQes="
 }

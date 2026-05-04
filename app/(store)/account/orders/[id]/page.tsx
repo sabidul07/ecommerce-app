@@ -102,7 +102,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                     )}
                   </div>
                   <div className="flex-1 space-y-1">
-                    <Link href={`/products/${item.products?.slug}`} className="text-lg font-medium text-ink hover:text-gold transition-colors line-clamp-1">
+                    <Link href={`/products/${item.products?.id}`} className="text-lg font-medium text-ink hover:text-gold transition-colors line-clamp-1">
                       {item.products?.title}
                     </Link>
                     <p className="text-sm text-stone">Quantity: {item.quantity}</p>

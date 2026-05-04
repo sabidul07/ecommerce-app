@@ -7,6 +7,9 @@ import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import Link from "next/link";
 
+import VerificationBadge from "./VerificationBadge";
+import WishlistToggle from "./WishlistToggle";
+
 interface ProductCardProps {
   product: Product;
 }
@@ -24,15 +27,15 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group card-hover flex flex-col p-4 relative">
+    <Link href={`/products/${product.id}`} className="group card-hover flex flex-col p-4 relative bg-white">
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-stone-light mb-4 rounded-sm">
+      <div className="relative aspect-[4/5] overflow-hidden bg-stone-light mb-4 rounded-sm">
         {product.image ? (
           <Image
             src={product.image}
             alt={product.title}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
@@ -41,60 +44,54 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
-        {/* Hover Actions Overlay */}
-        <div className="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-          <button className="w-10 h-10 rounded-full bg-parchment text-ink flex items-center justify-center shadow-xl hover:bg-gold hover:text-ink transition-all transform translate-y-4 group-hover:translate-y-0 duration-300">
-            <Eye size={18} />
-          </button>
-          <button className="w-10 h-10 rounded-full bg-parchment text-ink flex items-center justify-center shadow-xl hover:bg-rust hover:text-parchment transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 delay-[50ms]">
-            <Heart size={18} />
-          </button>
+        {/* Top Actions */}
+        <div className="absolute top-4 left-4">
+          <VerificationBadge status={product.profiles?.verification_status} tier="Bronze" />
+        </div>
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity translate-y-[-10px] group-hover:translate-y-0 duration-300">
+          <WishlistToggle product={product} />
         </div>
       </div>
 
       {/* Info */}
       <div className="flex-1 flex flex-col">
-        <h3 className="font-display text-xl font-light leading-tight mb-1 group-hover:text-gold transition-colors">
-          {product.title}
-        </h3>
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <h3 className="font-display text-xl font-light leading-tight group-hover:text-gold transition-colors">
+            {product.title}
+          </h3>
+          <p className="font-display text-lg font-light">
+            ₹{product.price.toFixed(0)}
+          </p>
+        </div>
         
         {product.profiles?.name && (
-          <p className="text-[10px] tracking-widest text-stone uppercase mb-3 flex items-center gap-1 opacity-70">
+          <p className="text-[9px] tracking-[0.2em] text-stone uppercase mb-3 flex items-center gap-1 opacity-70">
             {product.profiles.name}
           </p>
         )}
 
-        <div className="flex items-center gap-1 mb-4">
+        <div className="flex items-center gap-2 mb-6">
           <div className="flex items-center gap-0.5 text-gold">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={10} fill={i < 4 ? "currentColor" : "none"} />
             ))}
           </div>
-          <span className="text-[10px] text-stone font-bold mt-0.5">4.8</span>
+          <span className="text-[9px] text-stone font-bold uppercase tracking-widest">4.8 (12 Reviews)</span>
         </div>
 
         <div className="mt-auto">
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className="font-display text-2xl font-light">
-              ₹{product.price.toFixed(0)}
-            </span>
-          </div>
-          
-          <p className="text-[9px] font-bold text-rust uppercase tracking-tighter mb-4 animate-pulse">
-            Only 3 left in stock
-          </p>
-
           <button
             onClick={handleAddToCart}
-            className={`w-full text-[10px] tracking-[0.2em] font-bold py-3 transition-all duration-500 border ${added
+            className={`w-full text-[10px] tracking-[0.3em] font-bold py-3.5 transition-all duration-500 border ${added
               ? "bg-sage border-sage text-parchment"
               : "bg-ink border-ink text-parchment hover:bg-transparent hover:text-ink"
               }`}
           >
-            {added ? "ADDED TO CART ✓" : "ADD TO CART"}
+            {added ? "✓ ADDED" : "QUICK ADD"}
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
+

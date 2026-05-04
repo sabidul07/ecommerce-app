@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import BackToTop from "@/components/BackToTop";
+import { WishlistProvider } from "@/context/WishlistContext";
+
 
 export const metadata: Metadata = {
   title: "Atelier — Premium Marketplace",
@@ -53,9 +52,13 @@ export default function RootLayout({
       </head>
       <body>
         <CartProvider>
-          {children}
+          <WishlistProvider>
+            {children}
+          </WishlistProvider>
         </CartProvider>
       </body>
+
+
     </html>
   );
 }

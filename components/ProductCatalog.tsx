@@ -53,6 +53,13 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  const materials = ["Brass", "Ceramic", "Linen", "Wood", "Silk"];
+
+  const origins = ["Jaipur", "Kyoto", "Fez", "Udaipur", "Venice"];
+
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+  const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
+
   // Handle Filtering
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
@@ -62,9 +69,15 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
       const matchesRating = (p.rating || 0) >= minRating;
       const matchesStock = !onlyInStock || (p.inventory_count || 0) > 0;
       
-      return matchesSearch && matchesPrice && matchesCategory && matchesRating && matchesStock;
+      // Advanced Filters (from specifications JSONB)
+      const matchesMaterial = selectedMaterials.length === 0 || 
+        (p.specifications?.material && selectedMaterials.includes(p.specifications.material));
+      const matchesOrigin = selectedOrigins.length === 0 || 
+        (p.specifications?.origin && selectedOrigins.includes(p.specifications.origin));
+      
+      return matchesSearch && matchesPrice && matchesCategory && matchesRating && matchesStock && matchesMaterial && matchesOrigin;
     });
-  }, [products, searchQuery, priceRange, selectedCategories, minRating, onlyInStock]);
+  }, [products, searchQuery, priceRange, selectedCategories, minRating, onlyInStock, selectedMaterials, selectedOrigins]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories(prev => 
@@ -72,9 +85,23 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
     );
   };
 
+  const toggleMaterial = (mat: string) => {
+    setSelectedMaterials(prev => 
+      prev.includes(mat) ? prev.filter(m => m !== mat) : [...prev, mat]
+    );
+  };
+
+  const toggleOrigin = (org: string) => {
+    setSelectedOrigins(prev => 
+      prev.includes(org) ? prev.filter(o => o !== org) : [...prev, org]
+    );
+  };
+
   const clearFilters = () => {
     setPriceRange([0, 100000]);
     setSelectedCategories([]);
+    setSelectedMaterials([]);
+    setSelectedOrigins([]);
     setMinRating(0);
     setOnlyInStock(false);
     setSearchQuery("");
@@ -121,6 +148,40 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
         </div>
 
         <div>
+          <h3 className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mb-6">Material</h3>
+          <div className="flex flex-wrap gap-2">
+            {materials.map(mat => (
+              <button
+                key={mat}
+                onClick={() => toggleMaterial(mat)}
+                className={`px-3 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-widest border transition-all ${
+                  selectedMaterials.includes(mat) ? "bg-gold border-gold text-black" : "border-stone-light text-stone hover:border-stone"
+                }`}
+              >
+                {mat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mb-6">Origin</h3>
+          <div className="space-y-3">
+            {origins.map(org => (
+              <label key={org} className="flex items-center gap-3 cursor-pointer group">
+                <input 
+                  type="checkbox" 
+                  checked={selectedOrigins.includes(org)}
+                  onChange={() => toggleOrigin(org)}
+                  className="w-4 h-4 rounded border-stone-light text-ink focus:ring-gold"
+                />
+                <span className="text-sm text-stone group-hover:text-ink transition-colors">{org}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div>
           <h3 className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mb-6">Minimum Rating</h3>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map(star => (
@@ -158,6 +219,7 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
           Clear All Filters
         </button>
       </aside>
+
 
       {/* Main Content */}
       <div className="flex-1 space-y-8">

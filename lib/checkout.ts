@@ -125,5 +125,31 @@ export async function createMarketplaceOrder(items: CheckoutItem[], deliveryMeth
     status: 'Succeeded'
   });
 
+  // Award Loyalty Points (1 point per ₹100)
+  const earnedPoints = Math.floor(total / 100);
+  const { data: loyalty } = await supabase
+    .from("loyalty_points")
+    .select("points, history")
+    .eq("user_id", user.id)
+    .single();
+
+  const newPoints = (loyalty?.points || 0) + earnedPoints;
+  let newTier = 'Bronze';
+  if (newPoints >= 5000) newTier = 'Platinum';
+  else if (newPoints >= 2000) newTier = 'Gold';
+  else if (newPoints >= 500) newTier = 'Silver';
+
+  await supabase.from("loyalty_points").upsert({
+    user_id: user.id,
+    points: newPoints,
+    tier: newTier,
+    updated_at: new Date().toISOString(),
+    history: [
+      ...(loyalty?.history || []),
+      { order_id: order.id, points_earned: earnedPoints, date: new Date().toISOString() }
+    ]
+  });
+
   return { orderId: order.id, total };
 }
+
