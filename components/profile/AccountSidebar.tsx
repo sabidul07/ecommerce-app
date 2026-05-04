@@ -10,16 +10,18 @@ import {
   Heart,
   Settings,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 import { signOut } from "@/app/actions/auth";
 
 const menuItems = [
   { href: "/account", label: "Overview", icon: LayoutDashboard },
   { href: "/account/orders", label: "My Orders", icon: ShoppingBag },
+  { href: "/account/loyalty", label: "Atelier Rewards", icon: Sparkles },
+  { href: "/account/wishlist", label: "Wishlist", icon: Heart },
   { href: "/profile", label: "Profile Settings", icon: User },
   { href: "/profile#addresses", label: "Saved Addresses", icon: MapPin },
-  { href: "/wishlist", label: "Wishlist", icon: Heart },
   { href: "/account/security", label: "Security", icon: Settings },
 ];
 

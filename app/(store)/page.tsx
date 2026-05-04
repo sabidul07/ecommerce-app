@@ -5,6 +5,7 @@ import {
   Users,
   Leaf,
   Package,
+  Heart,
 } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import Hero from "@/components/Hero";
@@ -30,11 +31,15 @@ export default async function HomePage() {
     isAdmin = profile?.is_admin ?? false;
   }
 
-  const { data: featuredProducts } = await supabase
-    .from("products")
-    .select("*, profiles(name)")
-    .eq("is_featured", true)
-    .limit(8);
+  const [
+    { data: featuredProducts },
+    { data: latestSpotlight },
+    { data: recentCommunityPosts }
+  ] = await Promise.all([
+    supabase.from("products").select("*, profiles(name)").eq("is_featured", true).limit(8),
+    supabase.from("artisan_spotlights").select("*, profiles(name, avatar_url)").order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from("community_posts").select("*, profiles(name)").order('created_at', { ascending: false }).limit(4)
+  ]);
 
   const categories = [
     {
@@ -66,16 +71,16 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* ── HERO ── */}
+      {/* -- HERO -- */}
       <Hero isAdmin={isAdmin} />
 
-      {/* ── STATS BAR ── */}
+      {/* -- STATS BAR -- */}
       <StatsBar />
 
-      {/* ── TRENDING STRIP ── */}
+      {/* -- TRENDING STRIP -- */}
       <TrendingStrip />
 
-      {/* ── FEATURED PRODUCTS ── */}
+      {/* -- FEATURED PRODUCTS -- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
         <div className="flex items-end justify-between mb-10 flex-wrap gap-5">
           <div>
@@ -114,7 +119,59 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* ── WHY ATELIER ── */}
+      {/* -- ARTISAN SPOTLIGHT PREVIEW -- */}
+      {latestSpotlight && (
+        <section className="bg-ink text-white overflow-hidden relative">
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <Image
+              src={latestSpotlight.cover_image}
+              alt=""
+              fill
+              className="object-cover blur-3xl scale-110"
+            />
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
+                <Image
+                  src={latestSpotlight.cover_image}
+                  alt={latestSpotlight.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 text-gold mb-6">
+                  <Users size={16} />
+                  <span className="text-[10px] tracking-[0.4em] font-bold uppercase">Meet the Maker</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-8 italic leading-tight">
+                  {latestSpotlight.title}
+                </h2>
+                <div className="flex items-center gap-4 mb-10">
+                  <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20">
+                    <img src={latestSpotlight.profiles?.avatar_url} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">{latestSpotlight.profiles?.name}</p>
+                    <p className="text-[10px] text-stone-400 uppercase tracking-widest">Featured Artisan</p>
+                  </div>
+                </div>
+                <Link
+                  href={`/community/spotlights/${latestSpotlight.id}`}
+                  className="inline-flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-gold transition-colors"
+                >
+                  Read the Interview <ArrowRight size={18} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* -- WHY ATELIER -- */}
       <section className="bg-parchment border-y border-stone-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
           <div className="mb-16">
@@ -160,7 +217,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── SHOP BY CATEGORY ── */}
+      {/* -- SHOP BY CATEGORY -- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
         <div className="flex items-end justify-between mb-10 flex-wrap gap-5">
           <h2 className="font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink">Shop by Category</h2>
@@ -196,7 +253,39 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── SELLER CTA ── */}
+      {/* -- COMMUNITY GALLERY -- */}
+      {recentCommunityPosts && recentCommunityPosts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
+          <div className="flex flex-col items-center text-center mb-16">
+            <div className="flex items-center gap-2 text-gold mb-4">
+              <Heart size={16} fill="currentColor" className="text-rust" />
+              <span className="text-[10px] tracking-[0.4em] font-bold uppercase">Atelier In Your Space</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-display text-ink italic mb-4">Shared by You</h2>
+            <p className="text-stone max-w-lg">Tag @atelier_handcrafted to be featured in our global collector gallery.</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {recentCommunityPosts.map((post) => (
+              <div key={post.id} className="aspect-square relative rounded-2xl overflow-hidden group">
+                <Image src={post.image_url} alt={post.caption || ''} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-ink/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                  <p className="text-[10px] text-stone-300 font-bold uppercase tracking-widest mb-1">{post.profiles?.name}</p>
+                  <p className="text-xs text-white italic">"{post.caption}"</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <Link href="/community" className="text-xs font-bold text-ink uppercase tracking-widest border-b border-ink/20 pb-1 hover:text-gold hover:border-gold transition-all">
+              Explore the Community Hub
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* -- SELLER CTA -- */}
       <section className="relative bg-ink text-parchment py-14 xl:py-24 overflow-hidden">
         {/* Subtle noise texture overlay */}
         <div
@@ -242,7 +331,7 @@ export default async function HomePage() {
                     Add Product <ArrowRight size={18} />
                   </Link>
                   <Link
-                    href="/dashboard"
+                    href="/account"
                     className="border border-parchment/30 text-parchment px-8 py-4 text-base font-medium hover:bg-parchment/10 transition-all inline-flex items-center justify-center"
                   >
                     Go to Dashboard
@@ -261,7 +350,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── NEWSLETTER ── */}
+      {/* -- NEWSLETTER -- */}
       <Newsletter />
     </div>
   );

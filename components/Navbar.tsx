@@ -79,7 +79,8 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/products", label: "Shop" },
-    { href: "/products", label: "Categories" },
+    { href: "/artisans", label: "Artisans" },
+    { href: "/community", label: "Community" },
     { href: "/profile", label: "My Account", auth: true },
     { href: "/upload-product", label: "Sell", auth: true, adminOnly: true },
   ];
@@ -219,7 +220,7 @@ export default function Navbar() {
                     <Link href="/profile#addresses" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <MapPin size={16} /> Saved addresses
                     </Link>
-                    <Link href="/products" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
+                    <Link href="/account/wishlist" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-5 py-2.5 text-sm text-stone hover:text-ink hover:bg-parchment transition-colors">
                       <Heart size={16} /> Wishlist
                     </Link>
 

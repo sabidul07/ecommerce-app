@@ -88,3 +88,25 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface CommunityPost {
+  id: string;
+  user_id: string;
+  image_url: string;
+  caption?: string;
+  product_id?: string;
+  created_at: string;
+  profiles?: Profile;
+  products?: Product;
+}
+
+export interface ArtisanSpotlight {
+  id: string;
+  artisan_id: string;
+  title: string;
+  content: string;
+  cover_image: string;
+  interview_json?: any;
+  created_at: string;
+  profiles?: Profile;
+}
+

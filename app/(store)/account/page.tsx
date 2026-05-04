@@ -2,6 +2,7 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import { ShoppingBag, Heart, Star, Sparkles, ChevronRight, Package, Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { MotionDiv } from "@/components/MotionWrapper";
 import VerificationBadge from "@/components/VerificationBadge";
 
 export default async function AccountDashboardPage() {
@@ -14,16 +15,23 @@ export default async function AccountDashboardPage() {
     { data: profile },
     { data: orders },
     { data: wishlist },
-    { data: loyalty }
+    { data: loyalty },
+    { data: styleQuiz }
   ] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).single(),
     supabase.from("orders").select("*").eq("user_id", user.id).order('created_at', { ascending: false }).limit(3),
     supabase.from("wishlists").select("*, products(*)").eq("user_id", user.id).limit(4),
-    supabase.from("loyalty_points").select("*").eq("user_id", user.id).single()
+    supabase.from("loyalty_points").select("*").eq("user_id", user.id).single(),
+    supabase.from("style_quiz_results").select("*").eq("user_id", user.id).single()
   ]);
 
   return (
-    <div className="space-y-12">
+    <MotionDiv 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-12"
+    >
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -117,8 +125,14 @@ export default async function AccountDashboardPage() {
             <Sparkles size={16} />
             <span className="text-[10px] tracking-[0.3em] font-bold uppercase">Personalized Curation</span>
           </div>
-          <h2 className="text-3xl font-bold mb-4">Discover Your Next Masterpiece</h2>
-          <p className="text-stone-400 mb-8 max-w-lg">Based on your recent interest in artisan ceramics and earthy tones, we've curated a collection you'll love.</p>
+          <h2 className="text-3xl font-bold mb-4">
+            {styleQuiz ? `Curation for your ${styleQuiz.style_type} aesthetic` : 'Discover Your Next Masterpiece'}
+          </h2>
+          <p className="text-stone-400 mb-8 max-w-lg">
+            {styleQuiz 
+              ? `Based on your preference for ${styleQuiz.style_type}, we've selected pieces that harmonize with your unique vision.` 
+              : "Based on your recent interest in artisan ceramics and earthy tones, we've curated a collection you'll love."}
+          </p>
           <Link href="/products" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold hover:bg-gold transition-colors">
             Explore Collection <ChevronRight size={18} />
           </Link>
@@ -127,6 +141,6 @@ export default async function AccountDashboardPage() {
           <img src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover" />
         </div>
       </div>
-    </div>
+    </MotionDiv>
   );
 }
