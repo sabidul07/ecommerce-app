@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingBag, User, LogOut, Package, UploadCloud, Search, Truck, MapPin, Heart, LayoutDashboard } from "lucide-react";
+import { ShoppingBag, User, LogOut, Package, UploadCloud, Search, Truck, MapPin, Heart, LayoutDashboard, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { createClient } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
@@ -254,8 +254,81 @@ export default function Navbar() {
               <User size={20} />
             </Link>
           )}
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden p-2 text-ink hover:text-gold transition-colors ml-2"
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-stone-light overflow-hidden"
+          >
+            <div className="px-4 py-8 space-y-6">
+               {/* Mobile Search */}
+               <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const q = (e.currentTarget.elements.namedItem("q-mobile") as HTMLInputElement).value;
+                  if (q) {
+                    router.push(`/products?q=${encodeURIComponent(q)}`);
+                    setMenuOpen(false);
+                  }
+                }}
+                className="relative mb-8"
+              >
+                <input
+                  type="search"
+                  name="q-mobile"
+                  placeholder="Search collections..."
+                  className="w-full pl-12 pr-4 py-4 bg-parchment border border-stone-light rounded-2xl focus:border-gold outline-hidden text-sm"
+                />
+                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
+              </form>
+
+              <div className="flex flex-col gap-6">
+                {navLinks.map((link) => {
+                  if (link.auth && !user) return null;
+                  if (link.adminOnly && !isAdmin) return null;
+                  return (
+                    <Link
+                      key={link.href + link.label}
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`text-2xl font-display transition-colors ${pathname === link.href ? "text-gold" : "text-ink"}`}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="pt-8 border-t border-stone-light">
+                {user ? (
+                  <div className="space-y-4">
+                    <p className="text-xs text-stone uppercase tracking-widest">Account</p>
+                    <Link href="/profile" onClick={() => setMenuOpen(false)} className="block text-lg text-ink">My Profile</Link>
+                    <button onClick={handleSignOut} className="text-lg text-rust font-bold">Sign Out</button>
+                  </div>
+                ) : (
+                  <Link href="/login" onClick={() => setMenuOpen(false)} className="btn-gold w-full text-center py-4">Sign In</Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

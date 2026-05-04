@@ -258,7 +258,7 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
                         <p className="text-sm font-medium text-ink">{s.title}</p>
                         <p className="text-[10px] text-stone uppercase tracking-widest">{s.category}</p>
                       </div>
-                      <p className="text-xs font-bold text-gold">₹{s.price}</p>
+                      <p className="text-xs font-bold text-gold">₹{s.price.toLocaleString()}</p>
                     </button>
                   ))}
                 </motion.div>

@@ -8,14 +8,18 @@ import { Product } from '@/types';
 interface AddToCartButtonProps {
   product: Product;
   className?: string;
+  quantity?: number;
 }
 
-export default function AddToCartButton({ product, className }: AddToCartButtonProps) {
+export default function AddToCartButton({ product, className, quantity = 1 }: AddToCartButtonProps) {
   const { addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
   const handleAdd = () => {
-    addToCart(product);
+    // We add multiple times based on quantity for now as context handles simple add
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -27,11 +31,11 @@ export default function AddToCartButton({ product, className }: AddToCartButtonP
     >
       <div className={`flex items-center gap-3 transition-all duration-500 ${isAdded ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'}`}>
         <ShoppingBag size={18} />
-        ADD TO COLLECTION — ₹{product.price.toLocaleString()}
+        ADD TO CART — ₹{product.price.toLocaleString()}
       </div>
       <div className={`absolute inset-0 flex items-center justify-center gap-3 transition-all duration-500 bg-sage text-white ${isAdded ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
         <Check size={18} />
-        ADDED TO COLLECTION
+        ADDED TO CART
       </div>
     </button>
   );

@@ -28,15 +28,16 @@ export default function WishlistToggle({ product, className }: WishlistTogglePro
   return (
     <button
       onClick={toggle}
-      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all bg-white shadow-lg border border-stone-light hover:scale-110 active:scale-95 group ${className}`}
+      className={`group w-10 h-10 flex items-center justify-center rounded-full transition-all bg-white shadow-sm border border-stone-light hover:border-rust hover:shadow-md active:scale-95 ${className}`}
+      aria-label={active ? 'Remove from wishlist' : 'Add to wishlist'}
     >
       <motion.div
-        animate={{ scale: active ? [1, 1.3, 1] : 1 }}
-        transition={{ duration: 0.3 }}
+        animate={{ scale: active ? [1, 1.4, 1] : 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <Heart 
           size={18} 
-          className={`transition-colors ${active ? 'fill-rust text-rust' : 'text-stone-400 group-hover:text-rust'}`} 
+          className={`transition-colors ${active ? 'fill-rust text-rust' : 'text-ink group-hover:text-rust'}`} 
         />
       </motion.div>
     </button>

@@ -8,6 +8,7 @@ import React, {
   useEffect,
 } from "react";
 import { CartItem, Product } from "@/types";
+import CartToast from "@/components/CartToast";
 
 interface CartContextType {
   items: CartItem[];
@@ -17,6 +18,9 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   itemCount: number;
+  showToast: boolean;
+  setShowToast: (show: boolean) => void;
+  lastAddedProduct: Product | null;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -25,6 +29,8 @@ const CART_KEY = "atelier_cart";
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [lastAddedProduct, setLastAddedProduct] = useState<Product | null>(null);
 
   // Load from localStorage on first mount
   useEffect(() => {
@@ -48,6 +54,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items, hydrated]);
 
   const addToCart = useCallback((product: Product) => {
+    setLastAddedProduct(product);
+    setShowToast(true);
     setItems((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
       if (existing) {
@@ -98,9 +106,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         total,
         itemCount,
+        showToast,
+        setShowToast,
+        lastAddedProduct,
       }}
     >
       {children}
+      <CartToast 
+        show={showToast} 
+        onClose={() => setShowToast(false)} 
+        product={lastAddedProduct} 
+      />
     </CartContext.Provider>
   );
 }

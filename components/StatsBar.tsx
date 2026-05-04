@@ -1,59 +1,14 @@
 "use client";
 
-import { Leaf, ShieldCheck, Star, Users } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-
-function Counter({ end, duration = 2000, decimals = 0 }: { end: number, duration?: number, decimals?: number }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          const startTime = performance.now();
-
-          const animate = (currentTime: number) => {
-            const elapsedTime = currentTime - startTime;
-            const progress = Math.min(elapsedTime / duration, 1);
-
-            // ease-out cubic
-            const easeProgress = 1 - Math.pow(1 - progress, 3);
-
-            setCount(end * easeProgress);
-
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            } else {
-              setCount(end);
-            }
-          };
-
-          requestAnimationFrame(animate);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-
-    return () => observer.disconnect();
-  }, [end, duration]);
-
-  const formattedCount = decimals > 0
-    ? count.toFixed(decimals)
-    : Math.floor(count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  return <span ref={ref}>{formattedCount}</span>;
-}
+import { ArtisanIcon, SustainableIcon, TrustIcon, CraftIcon } from "./Icons";
+import Counter from "./Counter";
 
 export default function StatsBar() {
   const stats = [
-    { icon: Users, value: 10000, suffix: "+", label: "Happy Customers" },
-    { icon: Star, value: 2500, suffix: "+", label: "Active Sellers" },
-    { icon: Leaf, value: 25000, suffix: "+", label: "Products Sold" },
-    { icon: ShieldCheck, value: 4.8, suffix: "/5", label: "Average Rating", decimals: 1 },
+    { icon: ArtisanIcon, value: 10000, suffix: "+", label: "Happy Customers" },
+    { icon: CraftIcon, value: 2500, suffix: "+", label: "Active Sellers" },
+    { icon: SustainableIcon, value: 25000, suffix: "+", label: "Products Sold" },
+    { icon: TrustIcon, value: 4.8, suffix: "/5", label: "Average Rating", decimals: 1 },
   ];
 
   return (

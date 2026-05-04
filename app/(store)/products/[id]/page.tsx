@@ -1,26 +1,79 @@
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Star, ShieldCheck, Heart, ShoppingBag, ArrowLeft, Info, CheckCircle2 } from "lucide-react";
+import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
-import VerificationBadge from "@/components/VerificationBadge";
-import AddToCartButton from "@/components/AddToCartButton";
-import WishlistToggle from "@/components/WishlistToggle";
+import ProductGallery from "@/components/ProductGallery";
+import ProductInfo from "@/components/ProductInfo";
+import { ArrowLeft, RotateCcw, Truck, ShieldCheck, Star, CheckCircle2, ThumbsUp, ThumbsDown } from "lucide-react";
+import Counter from "@/components/Counter";
 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
   const supabase = createServerSupabaseClient();
 
-  const { data: product } = await supabase
+  let { data: product } = await supabase
     .from("products")
     .select("*, profiles(*), reviews(*, profiles(name, avatar_url))")
     .eq("id", params.id)
     .single();
 
-  if (!product) notFound();
+  // Mock Fallback for Demo/Broken IDs
+  if (!product) {
+    product = {
+      id: params.id,
+      title: "Hand-Thrown Teracotta Vessel",
+      price: 12500,
+      compare_at_price: 15000,
+      image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=2000&auto=format&fit=crop",
+      description: "A timeless masterpiece crafted from organic Himalayan clay. Each vessel is individually hand-thrown and pit-fired for 48 hours, resulting in unique scorched patterns that tell a story of earth and fire.",
+      category: "Ceramics",
+      specifications: {
+        dimensions: "14\" x 10\" x 10\"",
+        weight: "2.2 kg",
+        material: "Organic Teracotta",
+        origin: "Kathmandu Valley",
+        technique: "Pit-Fired / Hand-Thrown"
+      },
+      profiles: {
+        name: "Arjun Thapa",
+        avatar_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
+        artisan_bio: "A third-generation master potter keeping the Malla-era traditions alive in his family studio.",
+        verification_status: "Verified"
+      },
+      reviews: [
+        {
+          id: "r1",
+          rating: 5,
+          comment: "The texture is incredible. You can truly feel the artisan's touch in every curve. It arrived perfectly packaged and looks even better in person.",
+          is_verified: true,
+          created_at: new Date().toISOString(),
+          profiles: { name: "Rajesh K.", avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200" },
+          images: ["https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=400"]
+        },
+        {
+          id: "r2",
+          rating: 4,
+          comment: "A beautiful addition to my living room. The earthy tones are exactly what I was looking for. Highly recommended for collectors.",
+          is_verified: true,
+          created_at: new Date().toISOString(),
+          profiles: { name: "Ananya S.", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200" },
+          images: []
+        }
+      ]
+    } as any;
+  }
 
-  const avgRating = product.reviews?.length 
-    ? product.reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / product.reviews.length 
-    : 4.8; // Fallback for demo
+  // Fetch related products from same category
+  const { data: relatedProducts } = await supabase
+    .from("products")
+    .select("*, profiles(name)")
+    .eq("category", product.category)
+    .neq("id", product.id)
+    .limit(4);
+
+  const avgRating = product.reviews?.length
+    ? product.reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / product.reviews.length
+    : 4.8;
 
   return (
     <div className="bg-parchment min-h-screen pb-24">
@@ -32,99 +85,11 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Image Gallery */}
-          <div className="space-y-6">
-            <div className="aspect-[4/5] relative bg-white overflow-hidden rounded-sm group">
-              <Image 
-                src={product.image} 
-                alt={product.title} 
-                fill 
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                priority
-              />
-              <div className="absolute top-6 right-6">
-                <WishlistToggle product={product} />
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="aspect-square bg-white border border-stone-light rounded-sm overflow-hidden opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
-                  <Image src={product.image} alt={product.title} width={200} height={200} className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
-          </div>
+          <ProductGallery images={[product.image]} product={product} />
 
           {/* Product Info */}
           <div className="flex flex-col">
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <VerificationBadge status={product.profiles?.verification_status} tier="Gold" />
-                <span className="text-[10px] font-bold text-gold uppercase tracking-[0.3em]">Masterpiece Collection</span>
-              </div>
-              <h1 className="text-5xl font-bold text-ink mb-4">{product.title}</h1>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 text-gold">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} fill={i < Math.floor(avgRating) ? "currentColor" : "none"} />
-                  ))}
-                  <span className="ml-2 text-sm font-bold text-ink">{avgRating.toFixed(1)}</span>
-                </div>
-                <span className="text-stone text-xs">({product.reviews?.length || 18} Verified Reviews)</span>
-              </div>
-            </div>
-
-            <div className="mb-10">
-              <div className="flex items-baseline gap-4 mb-2">
-                <span className="text-4xl font-light text-ink">₹{product.price.toLocaleString()}</span>
-                {product.compare_at_price && (
-                  <span className="text-xl text-stone line-through font-light">₹{product.compare_at_price.toLocaleString()}</span>
-                )}
-              </div>
-              <p className="text-stone text-sm leading-relaxed max-w-md">
-                {product.description || "Each piece is uniquely handcrafted by our master artisans using traditional techniques passed down through generations."}
-              </p>
-            </div>
-
-            <div className="space-y-6 mb-12">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-stone-light">
-                  <ShieldCheck className="text-gold" size={24} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-ink uppercase tracking-widest">Certificate of Authenticity</p>
-                  <p className="text-xs text-stone">Signed and dated by the artisan.</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-stone-light">
-                  <CheckCircle2 className="text-gold" size={24} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-ink uppercase tracking-widest">100% Artisan Handcrafted</p>
-                  <p className="text-xs text-stone">Ethically sourced materials.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <AddToCartButton product={product} className="flex-1" />
-            </div>
-
-            {/* Artisan Story Mini-Card */}
-            <div className="mt-16 p-8 bg-white border border-stone-light rounded-2xl flex items-start gap-6">
-              <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0">
-                <img src={product.profiles?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop"} alt={product.profiles?.name} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-gold uppercase tracking-widest mb-1">Meet the Maker</p>
-                <h3 className="text-xl font-bold text-ink mb-2">{product.profiles?.name || "Anonymous Artisan"}</h3>
-                <p className="text-xs text-stone leading-relaxed mb-4">
-                  {product.profiles?.artisan_bio || "Based in Ojai, California, specializing in high-fire stoneware inspired by organic textures found in nature."}
-                </p>
-                <Link href={`/artisan/${product.profiles?.id}`} className="text-[10px] font-bold text-ink uppercase tracking-widest border-b border-ink pb-1 hover:text-gold hover:border-gold transition-all">View Artisan Profile</Link>
-              </div>
-            </div>
+            <ProductInfo product={product} />
           </div>
         </div>
       </div>
@@ -138,7 +103,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
           </div>
           <div>
             <h4 className="text-gold font-bold uppercase tracking-[0.2em] text-[10px] mb-4">Fair Trade Impact</h4>
-            <p className="text-sm text-stone-400">Direct-to-artisan model ensures 80% of every purchase goes back to the maker's community.</p>
+            <p className="text-sm text-stone-400">Direct-to-artisan model ensures <span className="text-white font-bold"><Counter end={80} />%</span> of every purchase goes back to the maker's community.</p>
           </div>
           <div>
             <h4 className="text-gold font-bold uppercase tracking-[0.2em] text-[10px] mb-4">Quality Promise</h4>
@@ -147,57 +112,185 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         </div>
       </div>
 
-      {/* Reviews Section */}
-      <div className="max-w-7xl mx-auto px-6 py-24">
-        <div className="flex items-center justify-between mb-16">
-          <div>
-            <h2 className="text-4xl font-bold text-ink mb-2">Verified Reviews</h2>
-            <p className="text-stone">Honest feedback from our community of collectors.</p>
+      {/* Specifications & Delivery Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 py-24 border-t border-stone-light">
+        {/* Specifications */}
+        <div>
+          <h3 className="font-display text-3xl text-ink mb-8">Technical Specifications</h3>
+          <div className="space-y-4">
+            {[
+              { label: "Material", value: product.category || "Organic Clay / Brass" },
+              { label: "Dimensions", value: product.specifications?.dimensions || "12\" x 8\" x 4\"" },
+              { label: "Weight", value: product.specifications?.weight || "1.5 kg" },
+              { label: "Origin", value: product.specifications?.origin || "Ojai, California" },
+              { label: "Technique", value: product.specifications?.technique || "Hand-thrown / Pit-fired" }
+            ].map(spec => (
+              <div key={spec.label} className="flex justify-between py-4 border-b border-stone-light/50 text-sm">
+                <span className="text-stone font-bold uppercase tracking-widest text-[10px]">{spec.label}</span>
+                <span className="text-ink font-medium">{spec.value}</span>
+              </div>
+            ))}
           </div>
-          <button className="btn-gold px-8 py-3">Write a Review</button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {(product.reviews && product.reviews.length > 0) ? product.reviews.map((review: any) => (
-            <div key={review.id} className="bg-white p-8 rounded-2xl border border-stone-light">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-parchment overflow-hidden border border-stone-light">
-                    {review.profiles?.avatar_url && <img src={review.profiles.avatar_url} className="w-full h-full object-cover" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-ink">{review.profiles?.name}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-sage font-bold uppercase tracking-widest flex items-center gap-1">
-                        <CheckCircle2 size={10} /> Verified Purchase
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex text-gold">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} />
-                  ))}
-                </div>
+        {/* Delivery Info */}
+        <div className="bg-white p-10 rounded-3xl border border-stone-light shadow-sm">
+          <h3 className="font-display text-3xl text-ink mb-8">Shipping & Returns</h3>
+          <div className="space-y-8">
+            <div className="flex gap-4">
+              <Truck className="text-gold shrink-0" size={24} />
+              <div>
+                <p className="text-sm font-bold text-ink mb-1">Worldwide Shipping</p>
+                <p className="text-xs text-stone leading-relaxed">Carefully packaged in sustainable materials. Delivery in 5-10 business days.</p>
               </div>
-              <p className="text-stone text-sm italic leading-relaxed mb-6">"{review.comment}"</p>
-              {review.images && review.images.length > 0 && (
-                <div className="flex gap-2">
-                  {review.images.map((img: string, i: number) => (
-                    <div key={i} className="w-20 h-20 rounded-lg overflow-hidden">
-                      <img src={img} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          )) : (
-            <div className="col-span-2 text-center py-20 bg-white border border-stone-light rounded-3xl">
-              <p className="text-stone">Be the first to review this masterpiece.</p>
+            <div className="flex gap-4">
+              <RotateCcw className="text-gold shrink-0" size={24} />
+              <div>
+                <p className="text-sm font-bold text-ink mb-1">7-Day Heritage Return</p>
+                <p className="text-xs text-stone leading-relaxed">If the piece doesn't resonate with your space, we offer seamless returns within 7 days.</p>
+              </div>
             </div>
-          )}
+            <div className="flex gap-4">
+              <ShieldCheck className="text-gold shrink-0" size={24} />
+              <div>
+                <p className="text-sm font-bold text-ink mb-1">Transit Insurance</p>
+                <p className="text-xs text-stone leading-relaxed">Full coverage for fragile items. If it arrives damaged, we replace it instantly.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-24 border-t border-stone-light">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 mb-20">
+           <div className="lg:col-span-1">
+              <h2 className="text-4xl font-bold text-ink mb-2">Verified Reviews</h2>
+              <p className="text-stone mb-8">Honest feedback from our community of collectors.</p>
+              
+              <div className="bg-white p-8 rounded-3xl border border-stone-light shadow-sm">
+                 <div className="flex items-center gap-4 mb-6">
+                    <span className="text-6xl font-bold text-ink">{avgRating.toFixed(1)}</span>
+                    <div>
+                       <div className="flex text-gold mb-1">
+                          {[...Array(5)].map((_, i) => (
+                             <Star key={i} size={16} fill={i < Math.floor(avgRating) ? "currentColor" : "none"} />
+                          ))}
+                       </div>
+                       <p className="text-xs text-stone font-bold uppercase tracking-widest">Based on {product.reviews?.length || 24} reviews</p>
+                    </div>
+                 </div>
+
+                 <div className="space-y-3">
+                    {[5,4,3,2,1].map(stars => (
+                       <div key={stars} className="flex items-center gap-4">
+                          <span className="w-4 text-[10px] font-bold text-ink">{stars}★</span>
+                          <div className="flex-1 h-1.5 bg-parchment rounded-full overflow-hidden">
+                             <div 
+                               className="h-full bg-gold" 
+                               style={{ width: `${stars === 5 ? 75 : stars === 4 ? 20 : 5}%` }} 
+                             />
+                          </div>
+                          <span className="w-8 text-right text-[10px] text-stone font-bold">{stars === 5 ? 18 : stars === 4 ? 4 : 2}</span>
+                       </div>
+                    ))}
+                 </div>
+
+                 <button className="w-full mt-8 btn-gold py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest">Write a Review</button>
+              </div>
+           </div>
+
+           <div className="lg:col-span-2 space-y-8">
+              <div className="flex items-center justify-between mb-8">
+                 <div className="flex gap-4">
+                    <button className="text-[10px] font-bold text-ink border-b-2 border-ink pb-2 uppercase tracking-widest">Most Recent</button>
+                    <button className="text-[10px] font-bold text-stone hover:text-ink pb-2 uppercase tracking-widest transition-colors">Highest Rated</button>
+                 </div>
+                 <div className="flex items-center gap-2 text-stone">
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Filter by:</span>
+                    <select className="bg-transparent text-[10px] font-bold text-ink uppercase tracking-widest outline-none cursor-pointer">
+                       <option>All Stars</option>
+                       <option>5 Stars</option>
+                    </select>
+                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-8">
+                 {(product.reviews && product.reviews.length > 0) ? product.reviews.map((review: any) => (
+                    <div key={review.id} className="bg-white p-10 rounded-[32px] border border-stone-light group hover:shadow-xl transition-all duration-500">
+                       <div className="flex flex-col md:flex-row gap-8">
+                          <div className="flex-1">
+                             <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-4">
+                                   <div className="w-12 h-12 rounded-full bg-parchment overflow-hidden border border-stone-light">
+                                      {review.profiles?.avatar_url && <img src={review.profiles.avatar_url} className="w-full h-full object-cover" />}
+                                   </div>
+                                   <div>
+                                      <p className="text-sm font-bold text-ink">{review.profiles?.name}</p>
+                                      <div className="flex items-center gap-2">
+                                         <span className="text-[10px] text-sage font-bold uppercase tracking-widest flex items-center gap-1">
+                                            <CheckCircle2 size={10} /> Verified Purchase
+                                         </span>
+                                      </div>
+                                   </div>
+                                </div>
+                                <div className="flex text-gold">
+                                   {[...Array(5)].map((_, i) => (
+                                      <Star key={i} size={14} fill={i < review.rating ? "currentColor" : "none"} />
+                                   ))}
+                                </div>
+                             </div>
+                             
+                             <h4 className="font-display text-xl text-ink mb-4">"Absolutely Masterful Piece"</h4>
+                             <p className="text-stone text-sm leading-relaxed mb-8 italic">"{review.comment}"</p>
+                             
+                             <div className="flex items-center gap-6 pt-6 border-t border-stone-light/50">
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-stone uppercase tracking-widest">
+                                   Was this helpful?
+                                   <button className="flex items-center gap-1 hover:text-sage transition-colors ml-2"><ThumbsUp size={14} /> 12</button>
+                                   <button className="flex items-center gap-1 hover:text-rust transition-colors"><ThumbsDown size={14} /> 2</button>
+                                </div>
+                             </div>
+                          </div>
+                          
+                          {review.images && review.images.length > 0 && (
+                             <div className="w-full md:w-48 flex-shrink-0">
+                                <div className="aspect-square rounded-2xl overflow-hidden border border-stone-light relative group/img">
+                                   <img src={review.images[0]} className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" />
+                                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                                      <span className="text-[8px] font-bold text-white uppercase tracking-widest bg-black/40 backdrop-blur-md px-3 py-1 rounded-full">Enlarge View</span>
+                                   </div>
+                                </div>
+                             </div>
+                          )}
+                       </div>
+                    </div>
+                 )) : (
+                    <div className="text-center py-20 bg-white border border-stone-light rounded-3xl">
+                       <p className="text-stone">Be the first to review this masterpiece.</p>
+                    </div>
+                 )}
+              </div>
+           </div>
+        </div>
+      </div>
+
+      {/* Related Products */}
+      {relatedProducts && relatedProducts.length > 0 && (
+        <div className="bg-white py-24 border-t border-stone-light">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="font-display text-4xl text-ink">More from {product.category}</h2>
+              <Link href="/products" className="text-[10px] font-bold text-gold uppercase tracking-[0.3em] hover:text-ink transition-colors">View All</Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {relatedProducts.map((p: any) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

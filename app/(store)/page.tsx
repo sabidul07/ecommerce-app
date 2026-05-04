@@ -6,6 +6,7 @@ import {
   Leaf,
   Package,
   Heart,
+  ShoppingBag,
 } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import Hero from "@/components/Hero";
@@ -14,6 +15,8 @@ import TrendingStrip from "@/components/TrendingStrip";
 import Newsletter from "@/components/Newsletter";
 import ProductCard from "@/components/ProductCard";
 import Image from "next/image";
+import Counter from "@/components/Counter";
+import { ArtisanIcon, SustainableIcon, TrustIcon, CommunityIcon, CraftIcon } from "@/components/Icons";
 
 export default async function HomePage() {
   const supabase = createServerSupabaseClient();
@@ -44,27 +47,32 @@ export default async function HomePage() {
   const categories = [
     {
       name: "Home & Living",
-      count: "120+",
+      value: 120,
+      suffix: "+",
       image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800&auto=format&fit=crop",
     },
     {
       name: "Accessories",
-      count: "85+",
+      value: 85,
+      suffix: "+",
       image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=800&auto=format&fit=crop"
     },
     {
       name: "Ceramics",
-      count: "60+",
+      value: 60,
+      suffix: "+",
       image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop"
     },
     {
       name: "Art & Prints",
-      count: "95+",
+      value: 95,
+      suffix: "+",
       image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop",
     },
     {
       name: "Personal Care",
-      count: "70+",
+      value: 70,
+      suffix: "+",
       image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800&auto=format&fit=crop",
     },
   ];
@@ -187,17 +195,17 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: Leaf,
+                icon: CraftIcon,
                 title: "Curated Quality",
                 desc: "Every product is reviewed to ensure it meets our standards of craftsmanship and authenticity.",
               },
               {
-                icon: ShieldCheck,
+                icon: TrustIcon,
                 title: "Secure Transactions",
                 desc: "Your payments and personal data are protected with industry-leading security.",
               },
               {
-                icon: Users,
+                icon: ArtisanIcon,
                 title: "Seller Community",
                 desc: "Join thousands of artisans and independent creators building their businesses here.",
               },
@@ -219,34 +227,55 @@ export default async function HomePage() {
 
       {/* -- SHOP BY CATEGORY -- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 xl:py-24">
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-5">
-          <h2 className="font-display text-[28px] sm:text-3xl md:text-4xl font-light text-ink">Shop by Category</h2>
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-6">
+          <div>
+            <div className="flex items-center gap-2 text-gold mb-3">
+              <ShoppingBag size={16} />
+              <span className="text-[10px] tracking-[0.4em] font-bold uppercase">Collections</span>
+            </div>
+            <h2 className="font-display text-[32px] sm:text-4xl md:text-5xl font-light text-ink">Shop by Category</h2>
+          </div>
           <Link
             href="/products"
-            className="text-stone text-sm font-medium hover:text-ink hover:underline inline-flex items-center gap-2 transition-colors"
+            className="group inline-flex items-center gap-3 text-sm font-bold text-ink uppercase tracking-widest hover:text-gold transition-all"
           >
-            View all categories <ArrowRight size={14} />
+            Explore all <div className="w-8 h-[1px] bg-ink/20 group-hover:w-12 group-hover:bg-gold transition-all" /> <ArrowRight size={16} />
           </Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {categories.map((cat) => (
             <Link
               key={cat.name}
-              href="/products"
-              className="group cursor-pointer block relative rounded-xs overflow-hidden aspect-4/5 transition-transform duration-300 hover:scale-[1.03]"
+              href={`/products?category=${encodeURIComponent(cat.name)}`}
+              className="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-parchment shadow-lg hover:shadow-2xl transition-all duration-700 hover:-translate-y-2"
             >
               <Image
                 src={cat.image}
                 alt={cat.name}
                 fill
                 unoptimized
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, 20vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-ink/90 via-ink/20 to-transparent transition-opacity group-hover:opacity-100 opacity-80" />
-              <div className="absolute bottom-0 left-0 w-full p-4">
-                <p className="font-display text-xl text-white mb-1">{cat.name}</p>
-                <p className="text-white/70 text-xs tracking-wider uppercase font-semibold">{cat.count} products</p>
+              
+              {/* Dynamic Gradient Overlay for better contrast */}
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent opacity-70 group-hover:opacity-80 transition-opacity duration-500" />
+              
+              <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">
+                    <Counter end={cat.value} />{cat.suffix} Pieces
+                  </p>
+                  <h3 className="font-display text-2xl text-white mb-4 drop-shadow-md">
+                    {cat.name}
+                  </h3>
+                  
+                  <div className="flex items-center gap-2 text-white/0 group-hover:text-gold transition-all duration-500">
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Shop Collection</span>
+                    <ArrowRight size={12} />
+                  </div>
+                </div>
               </div>
             </Link>
           ))}
