@@ -1,7 +1,8 @@
 {
+  "/(store)/cart/page": "app/(store)/cart/page.js",
+  "/(store)/products/page": "app/(store)/products/page.js",
   "/(store)/page": "app/(store)/page.js",
-  "/admin/products/page": "app/admin/products/page.js",
-  "/admin/products/[id]/edit/page": "app/admin/products/[id]/edit/page.js",
-  "/(store)/products/[id]/page": "app/(store)/products/[id]/page.js",
-  "/(store)/checkout/page": "app/(store)/checkout/page.js"
+  "/(store)/account/orders/page": "app/(store)/account/orders/page.js",
+  "/(store)/account/page": "app/(store)/account/page.js",
+  "/(store)/account/wishlist/page": "app/(store)/account/wishlist/page.js"
 }
