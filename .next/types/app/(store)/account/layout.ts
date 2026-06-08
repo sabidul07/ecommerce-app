@@ -1,4 +1,4 @@
-// File: /Users/muskankhan/Projects/ecommerce-app/app/(store)/account/layout.tsx
+// File: /Users/muskankhan/Projects/ecommerce-app-1/app/(store)/account/layout.tsx
 import * as entry from '../../../../../app/(store)/account/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
